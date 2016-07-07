@@ -1,9 +1,12 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.objects;
 
+import java.util.HashMap;
+
+import de.fhaachen.mazenet.config.Settings;
 import de.fhaachen.mazenet.generated.CardType;
 import de.fhaachen.mazenet.generated.TreasureType;
+import de.fhaachen.mazenet.server.Card;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -12,16 +15,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import de.fhaachen.mazenet.server.Card;
-
-import java.util.HashMap;
 
 /**
  * Created by Richard Zameitat on 26.05.2016.
  */
 public class CardFX extends Box {
 
-    private Box box;
+    //private Box box;
     private TreasureFX treasure = null;
     private static final double TREASURE_OFFSET_Y = -0.1;
 
@@ -33,11 +33,11 @@ public class CardFX extends Box {
     private static final HashMap<Card.CardShape,Image> CARD_SHAPE_IMAGE_MAPPING;
 
     static {
-        final String imgPre = "/server/userInterface/resources/";
+        final String imgPre = Settings.IMAGEPATH;
         CARD_SHAPE_IMAGE_MAPPING = new HashMap<>();
-        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.I,new Image(imgPre+"I0.png"));
-        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.L,new Image(imgPre+"L0.png"));
-        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.T,new Image(imgPre+"T0.png"));
+        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.I,new Image(imgPre+"I0.png")); //$NON-NLS-1$
+        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.L,new Image(imgPre+"L0.png")); //$NON-NLS-1$
+        CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.T,new Image(imgPre+"T0.png")); //$NON-NLS-1$
 
     }
 
@@ -83,6 +83,12 @@ public class CardFX extends Box {
     public void removeFrom(Group root3d){
         root3d.getChildren().removeAll(this,treasure);
     }
+
+	public TreasureFX getTreasure() {
+		return treasure;
+	}
+    
+    
 
     /*public void updateFromCardType(CardType ct){
         Card tC = new Card(ct);

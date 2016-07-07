@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" prefHeight="544.0" prefWidth="872.0" stylesheets="@MainUI.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.userInterface.mazeFX.C_MainUI">
+<StackPane fx:id="rootPane" prefHeight="544.0" prefWidth="872.0" stylesheets="@MainUI.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_MainUI">
 	<children>
 		<HBox prefHeight="100.0" prefWidth="200.0">
 			<children>

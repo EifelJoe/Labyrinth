@@ -1,12 +1,10 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.objects;
 
-import javafx.beans.binding.Bindings;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Translate;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
 
 /**
  * Created by Richard on 01.06.2016.
