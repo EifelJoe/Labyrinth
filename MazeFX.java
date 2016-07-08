@@ -142,13 +142,13 @@ public class MazeFX extends Application implements UI {
 	private void startActionPerformed() {
 		controller.gameStarted();
 		Debug.print("MazeFX.startactionPerformed", DebugLevel.DEFAULT); //$NON-NLS-1$
+		Settings.DEFAULT_PLAYERS = controller.getMaxPlayer();
 		if (game == null) {
 			setGame(new Game());
 		}
 		String[] arguments = new String[0];
 		game.parsArgs(arguments);
 		game.setUserinterface(this);
-		Settings.DEFAULT_PLAYERS = controller.getMaxPlayer();
 		// $NON-NLS-1$
 		game.start();
 	}
