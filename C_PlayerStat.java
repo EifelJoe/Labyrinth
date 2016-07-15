@@ -28,8 +28,8 @@ public class C_PlayerStat {
     @FXML
     private Label numRemaining;
 
-    public void setTeamId(String id){
-        this.teamId.textProperty().setValue(id);
+    public void setTeamId(int playerId){
+        this.teamId.textProperty().setValue(Integer.toString(playerId)); //$NON-NLS-1$
     }
 
     public void setPlayerName(String playerName){
@@ -40,11 +40,11 @@ public class C_PlayerStat {
 		this.treasureImage.setImage(ImageResourcesFX.getImage(treasureImage));
 	}
 
-	public void setNumFound(Label numFound) {
-		this.numFound = numFound;
+	public void setNumFound(int numFound) {
+		this.numFound.setText(Integer.toString(numFound));
 	}
 
-	public void setNumRemaining(Label numRemaining) {
-		this.numRemaining = numRemaining;
+	public void setNumRemaining(int numRemaining) {
+		this.numRemaining.setText(Integer.toString(numRemaining));
 	}
 }

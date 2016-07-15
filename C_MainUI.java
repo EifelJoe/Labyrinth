@@ -150,6 +150,7 @@ public class C_MainUI implements Initializable {
 
     public void addPlayerStat(Node statNode){
         playerStatsContrainer.getChildren().addAll(statNode);
+        playerStatsContrainer.autosize();
     }
 
     public void clearPlayerStats(){

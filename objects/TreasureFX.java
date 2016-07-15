@@ -42,9 +42,7 @@ public class TreasureFX extends Cylinder {
 	}
 
 	public void treasureFound() {
-			URL u = ImageResourcesFX.class.getResource(Settings.IMAGEPATH + "found" //$NON-NLS-1$
-					+ Settings.IMAGEFILEEXTENSION);
-			image= new Image(u.toString());
-			material.setDiffuseMap(image);
+		ImageResourcesFX.treasureFound(treasureType.value());
+		material.setDiffuseMap(ImageResourcesFX.getImage(treasureType.value()));
 	}
 }

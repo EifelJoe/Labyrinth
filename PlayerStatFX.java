@@ -12,22 +12,35 @@ import java.util.ResourceBundle;
  */
 public class PlayerStatFX {
 
-    public final int playerId;
-    public final C_PlayerStat controller;
-    public final Node root;
+	public final int playerId;
+	public final C_PlayerStat controller;
+	public final Node root;
+	private int treasureFound;
+	private int cachedTreasuresRemaining;
 
-    public PlayerStatFX(int playerId) throws IOException {
-        this.playerId = playerId;
+	public PlayerStatFX(int playerId) throws IOException {
+		this.playerId = playerId;
 
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("PlayerStat.fxml"));
-        fxmlLoader.setResources(ResourceBundle.getBundle("server.userInterface.messages"));
-        root = fxmlLoader.load();
-        controller = fxmlLoader.getController();
-    }
+		FXMLLoader fxmlLoader = new FXMLLoader();
+		fxmlLoader.setLocation(getClass().getResource("PlayerStat.fxml")); //$NON-NLS-1$
+		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhaachen.mazenet.server.userInterface.messages")); //$NON-NLS-1$
+		root = fxmlLoader.load();
+		controller = fxmlLoader.getController();
+		// da die Nummer der zu suchenden Schätze 
+		// nicht bekannt ist wird zuerst auf 0 erhöht
+		treasureFound = -1;
+	}
 
-    public void update(Player p){
-    	
-    }
+	public void update(Player p) {
+		if (!(cachedTreasuresRemaining == p.treasuresToGo())) {
+			controller.setNumFound(++treasureFound);
+		}
+		cachedTreasuresRemaining = p.treasuresToGo();
+		controller.setTeamId(playerId);
+		controller.setPlayerName(p.getName());
+		controller.setNumRemaining(p.treasuresToGo());
+		controller.setTreasureImage(p.getCurrentTreasure().value());
+
+	}
 
 }
