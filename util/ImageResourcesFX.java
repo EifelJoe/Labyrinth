@@ -1,13 +1,10 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
 
-import javafx.scene.image.Image;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
-
 import de.fhaachen.mazenet.config.Settings;
+import javafx.scene.image.Image;
 
 public class ImageResourcesFX {
 	private static HashMap<String, Image> images = new HashMap<String, Image>();

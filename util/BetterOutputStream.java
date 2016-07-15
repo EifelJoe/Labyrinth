@@ -1,9 +1,6 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 /**

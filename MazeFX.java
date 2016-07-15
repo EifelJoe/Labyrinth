@@ -2,15 +2,46 @@ package de.fhaachen.mazenet.server.userInterface.mazeFX;/**
 														* Created by Richard Zameitat on 25.05.2016.
 														*/
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
+
+import de.fhaachen.mazenet.config.Settings;
 import de.fhaachen.mazenet.generated.CardType;
 import de.fhaachen.mazenet.generated.MoveMessageType;
 import de.fhaachen.mazenet.generated.PositionType;
-import javafx.animation.*;
+import de.fhaachen.mazenet.server.Board;
+import de.fhaachen.mazenet.server.Card;
+import de.fhaachen.mazenet.server.Game;
+import de.fhaachen.mazenet.server.Player;
+import de.fhaachen.mazenet.server.userInterface.Messages;
+import de.fhaachen.mazenet.server.userInterface.UI;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
+import de.fhaachen.mazenet.tools.Debug;
+import de.fhaachen.mazenet.tools.DebugLevel;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -20,27 +51,6 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import de.fhaachen.mazenet.server.Board;
-import de.fhaachen.mazenet.server.Card;
-import de.fhaachen.mazenet.server.Game;
-import de.fhaachen.mazenet.server.Player;
-import de.fhaachen.mazenet.server.userInterface.UI;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ExecuteTransition;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeDoubleBinding;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
-import de.fhaachen.mazenet.tools.Debug;
-import de.fhaachen.mazenet.tools.DebugLevel;
-
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-
-import de.fhaachen.mazenet.config.Settings;
 
 public class MazeFX extends Application implements UI {
 
@@ -100,7 +110,7 @@ public class MazeFX extends Application implements UI {
 			System.exit(0);
 		});
 		FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setLocation(getClass().getResource("MainUI.fxml"));
+		fxmlLoader.setLocation(getClass().getResource("MainUI.fxml")); //$NON-NLS-1$
 		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhaachen.mazenet.server.userInterface.messages")); //$NON-NLS-1$
 		root = fxmlLoader.load();
 		controller = fxmlLoader.getController();
@@ -110,7 +120,7 @@ public class MazeFX extends Application implements UI {
 		controller.addStartServerListener(this::startActionPerformed);
 		controller.addStopServerListener(this::stopActionPerformed);
 
-		primaryStage.setTitle("MazeFX");
+		primaryStage.setTitle(Messages.getString("MazeFX.WindowTitle")); //$NON-NLS-1$
 		Scene scene = new Scene(root, 1000, 600);
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -423,7 +433,6 @@ public class MazeFX extends Application implements UI {
 		 * 
 		 * PauseTransition debugTr2 = new PauseTransition(durMove);/
 		 **/
-
 		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, animAfter, moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
@@ -431,12 +440,12 @@ public class MazeFX extends Application implements UI {
 			if (pinBind_final != null) {
 				pinBind_final.unbind();
 			}
+			if (treasureReached) {
+				boardCards[newPinPos.getRow()][newPinPos.getCol()].getTreasure().treasureFound();
+			}
 			pin.bindToCard(boardCards[newPinPos.getRow()][newPinPos.getCol()]);
 		});
 		allTr.play();
-		if (treasureReached) {
-			boardCards[newPinPos.getRow()][newPinPos.getCol()].getTreasure().treasureFound();
-		}
 	}
 
 	@Override

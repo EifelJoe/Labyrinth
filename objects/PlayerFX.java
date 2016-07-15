@@ -14,7 +14,6 @@ public class PlayerFX extends Sphere {
     private static final double RADIUS = 0.15;
     private static final double OFFSET_Y = -0.4;
 
-    private int id;
     private CardFX boundCard;
     private FakeTranslateBinding binding;
     private PhongMaterial material;
@@ -27,7 +26,6 @@ public class PlayerFX extends Sphere {
 
     public PlayerFX(int id, CardFX card){
         this();
-        this.id = id;
         material.setDiffuseColor(playerIdToColor(id));
         bindToCard(card);
     }
