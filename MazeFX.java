@@ -142,10 +142,12 @@ public class MazeFX extends Application implements UI {
 					controller.addPlayerStat(stat.root);
 				}
 				stat.update(p);
+				stat.active(false);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
+		playerStats.get(current).active(true);
 
 	}
 

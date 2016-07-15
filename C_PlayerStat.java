@@ -3,6 +3,7 @@ package de.fhaachen.mazenet.server.userInterface.mazeFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
@@ -27,6 +28,9 @@ public class C_PlayerStat {
 
     @FXML
     private Label numRemaining;
+    
+    @FXML
+    private Label activePlayer;
 
     public void setTeamId(int playerId){
         this.teamId.textProperty().setValue(Integer.toString(playerId));
@@ -46,5 +50,13 @@ public class C_PlayerStat {
 
 	public void setNumRemaining(int numRemaining) {
 		this.numRemaining.setText(Integer.toString(numRemaining));
+	}
+	
+	public void setActive(boolean act){
+		if(act){
+			activePlayer.setText(">");
+		}else{
+			activePlayer.setText("");
+		}
 	}
 }

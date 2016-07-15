@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_PlayerStat">
+<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_PlayerStat">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="25.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -64,6 +64,7 @@
             </Label>
          </children>
       </GridPane>
+      <Label fx:id="activePlayer" text="&gt;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
    </children>
    <effect>
       <DropShadow />

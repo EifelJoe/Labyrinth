@@ -40,7 +40,9 @@ public class PlayerStatFX {
 		controller.setPlayerName(p.getName());
 		controller.setNumRemaining(p.treasuresToGo());
 		controller.setTreasureImage(p.getCurrentTreasure().value());
-
+	}
+	public void active(boolean act){
+		controller.setActive(act);
 	}
 
 }
