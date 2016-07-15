@@ -7,7 +7,7 @@ import de.fhaachen.mazenet.config.Settings;
 import javafx.scene.image.Image;
 
 public class ImageResourcesFX {
-	private static HashMap<String, Image> images = new HashMap<String, Image>();
+	private static HashMap<String, Image> images=new HashMap<String, Image>();
 
 	private ImageResourcesFX() {
 	}

@@ -6,19 +6,24 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import de.fhaachen.mazenet.config.Settings;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.BetterOutputStream;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
+import de.fhaachen.mazenet.tools.Debug;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.BetterOutputStream;
-import de.fhaachen.mazenet.tools.Debug;
 
 /**
  * Created by Richard Zameitat on 25.05.2016.
@@ -58,6 +63,9 @@ public class C_MainUI implements Initializable {
     @FXML
     private VBox playerStatsContrainer;
 
+    @FXML
+    private Label playerStatsPlaceholder;
+    
     public int getMaxPlayer(){
     	return maxPlayer.getValue().intValue();
     }
@@ -140,6 +148,9 @@ public class C_MainUI implements Initializable {
         serverStart.disableProperty().setValue(true);
         maxPlayer.disableProperty().setValue(true);
         serverStop.disableProperty().setValue(false);
+        clearPlayerStats();
+        ImageResourcesFX.reset();
+        playerStatsPlaceholder.setVisible(true);
     }
 
     public void gameStopped(){
@@ -149,12 +160,15 @@ public class C_MainUI implements Initializable {
     }
 
     public void addPlayerStat(Node statNode){
+    	playerStatsPlaceholder.setVisible(false);
         playerStatsContrainer.getChildren().addAll(statNode);
-        playerStatsContrainer.autosize();
+        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size()*60);
     }
 
     public void clearPlayerStats(){
         playerStatsContrainer.getChildren().clear();
+        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size()*60);
+
     }
     
     @Override

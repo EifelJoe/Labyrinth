@@ -139,8 +139,8 @@ public class MazeFX extends Application implements UI {
 				PlayerStatFX stat = playerStats.get(p.getID());
 				if (stat == null) {
 					playerStats.put(p.getID(), stat = createPlayerStat(p.getID()));
+					controller.addPlayerStat(stat.root);
 				}
-				controller.addPlayerStat(stat.root);
 				stat.update(p);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -303,6 +303,7 @@ public class MazeFX extends Application implements UI {
 	private void clearBoard() {
 		currentPlayer = null;
 		if (players != null) {
+			playerStats = new HashMap<>();
 			scene3dRoot.getChildren().removeAll(players.values());
 			players = null;
 		}
@@ -483,6 +484,6 @@ public class MazeFX extends Application implements UI {
 
 	@Override
 	public void gameEnded(Player winner) {
-
+		controller.gameStopped();
 	}
 }

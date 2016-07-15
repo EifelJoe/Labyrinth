@@ -29,7 +29,7 @@ public class C_PlayerStat {
     private Label numRemaining;
 
     public void setTeamId(int playerId){
-        this.teamId.textProperty().setValue(Integer.toString(playerId)); //$NON-NLS-1$
+        this.teamId.textProperty().setValue(Integer.toString(playerId));
     }
 
     public void setPlayerName(String playerName){
