@@ -4,10 +4,20 @@
 .playerStat, .playerStat * {
     -fx-fill: #ddd;
 }/**/
-.playerStat * {
+.playerStat *:not(.progress) {
     -fx-background-color: transparent;
 }
 
+.playerStat .progress {
+    -fx-min-height: 10;
+    -fx-pref-height: 10;
+    -fx-max-height: 10;
+}
+
+.playerStat .progress .bar {
+    -fx-padding: 0;
+    -fx-background-insets: 2 2 3 2;
+}
 
 .treasureStats .label {
     -fx-font-size: 11;
