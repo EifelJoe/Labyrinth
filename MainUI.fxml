@@ -106,7 +106,7 @@
 							<content>
 								<AnchorPane minHeight="50.0" minWidth="0.0" prefWidth="200.0" styleClass="currentGamePane">
 									<children>
-										<StackPane layoutX="7.0" layoutY="-13.0" prefHeight="60" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+										<StackPane layoutX="7.0" layoutY="-13.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 											<children>
 												<Label fx:id="playerStatsPlaceholder" text="%MazeFX.noPlayers" textAlignment="CENTER" textFill="#80808080" wrapText="true">
 													<font>
