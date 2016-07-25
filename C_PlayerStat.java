@@ -54,8 +54,12 @@ public class C_PlayerStat {
 	
 	public void setActive(boolean act){
 		if(act){
+			if(!root.getStyleClass().contains("active")) {
+				root.getStyleClass().add("active");
+			}
 			activePlayer.setText(">");
 		}else{
+			root.getStyleClass().remove("active");
 			activePlayer.setText("");
 		}
 	}
