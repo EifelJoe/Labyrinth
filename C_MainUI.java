@@ -91,6 +91,18 @@ public class C_MainUI implements Initializable {
     }
 
     @FXML
+    private void camRotUpBtMousePress(MouseEvent evt){ camRotateUpStartListeners.forEach(r->r.run()); }
+
+    @FXML
+    private void camRotUpBtMouseRelease(MouseEvent evt){ camRotateUpStopListeners.forEach(r->r.run()); }
+
+    @FXML
+    private void camRotDownBtMousePress(MouseEvent evt){ camRotateDownStartListeners.forEach(r->r.run()); }
+
+    @FXML
+    private void camRotDownBtMouseRelease(MouseEvent evt){ camRotateDownStopListeners.forEach(r->r.run()); }
+
+    @FXML
     private void serverStartAction(ActionEvent aevt){
     	//TODO
     	startServerListeners.forEach(r->r.run());
@@ -132,6 +144,26 @@ public class C_MainUI implements Initializable {
     private List<Runnable> camRotateLeftStopListeners = new LinkedList<>();
     public void addCamRotateLeftStopListener(Runnable r){
         camRotateLeftStopListeners.add(r);
+    }
+
+    private List<Runnable> camRotateUpStartListeners = new LinkedList<>();
+    public void addCamRotateUpStartListener(Runnable r){
+        camRotateUpStartListeners.add(r);
+    }
+
+    private List<Runnable> camRotateUpStopListeners = new LinkedList<>();
+    public void addCamRotateUpStopListener(Runnable r){
+        camRotateUpStopListeners.add(r);
+    }
+
+    private List<Runnable> camRotateDownStartListeners = new LinkedList<>();
+    public void addCamRotateDownStartListener(Runnable r){
+        camRotateDownStartListeners.add(r);
+    }
+
+    private List<Runnable> camRotateDownStopListeners = new LinkedList<>();
+    public void addCamRotateDownStopListener(Runnable r){
+        camRotateDownStopListeners.add(r);
     }
 
     private List<Runnable> startServerListeners = new LinkedList<>();

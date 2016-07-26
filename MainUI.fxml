@@ -40,13 +40,13 @@
 										<TilePane alignment="CENTER" prefColumns="3" prefHeight="120.0" prefRows="3" prefTileHeight="25.0" prefTileWidth="25.0" prefWidth="120.0" styleClass="move3dGrid" VBox.vgrow="NEVER">
 											<children>
 												<Label graphicTextGap="0.0" styleClass="dummy" />
-												<Button mnemonicParsing="false" text="⬘" />
+												<Button mnemonicParsing="false" onMousePressed="#camRotUpBtMousePress" onMouseReleased="#camRotUpBtMouseRelease" text="⬘" />
 												<Label graphicTextGap="0.0" styleClass="dummy" />
 												<Button mnemonicParsing="false" onMousePressed="#camRotLeftBtMousePress" onMouseReleased="#camRotLeftBtMouseRelease" text="⬖" />
 												<Button mnemonicParsing="false" text="■" />
 												<Button alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onMousePressed="#camRotRightBtMousePress" onMouseReleased="#camRotRightBtMouseRelease" text="⬗" />
 												<Label graphicTextGap="0.0" styleClass="dummy" />
-												<Button minWidth="-Infinity" mnemonicParsing="false" text="⬙" />
+												<Button minWidth="-Infinity" mnemonicParsing="false" onMousePressed="#camRotDownBtMousePress" onMouseReleased="#camRotDownBtMouseRelease" text="⬙" />
 												<Label graphicTextGap="0.0" styleClass="dummy" />
 											</children>
 										</TilePane>

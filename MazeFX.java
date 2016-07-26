@@ -22,6 +22,7 @@ import de.fhaachen.mazenet.server.userInterface.Messages;
 import de.fhaachen.mazenet.server.userInterface.UI;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AddTransition;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
 import de.fhaachen.mazenet.tools.Debug;
@@ -35,7 +36,6 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
@@ -102,6 +102,11 @@ public class MazeFX extends Application implements UI {
 	private Map<Integer, PlayerFX> players;
 	private Map<Integer, PlayerStatFX> playerStats = new HashMap<>();
 	private PlayerFX currentPlayer;
+
+	private static final double CAM_ROTATE_X_INITIAL = -40;
+	private static final double CAM_ROTATE_Y_INITIAL = 15;
+	private Rotate camRotateX = new Rotate(CAM_ROTATE_X_INITIAL, Rotate.X_AXIS);
+	private Rotate camRotateY = new Rotate(CAM_ROTATE_Y_INITIAL, Rotate.Y_AXIS);
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -190,42 +195,56 @@ public class MazeFX extends Application implements UI {
 		sub3d.heightProperty().bind(parent3d.heightProperty());
 		sub3d.widthProperty().bind(parent3d.widthProperty());
 
-		Rotate camRotY = new Rotate(15, Rotate.Y_AXIS);
-		Rotate camRotX = new Rotate(-40, Rotate.X_AXIS);
 		Translate camTranZ = new Translate(0, 0, -15);
 
 		// Create and position camera
 		PerspectiveCamera camera = new PerspectiveCamera(true);
-		camera.getTransforms().addAll(camRotY, camRotX, camTranZ);
+		camera.getTransforms().addAll(camRotateY, camRotateX, camTranZ);
 
 		camTranZ.zProperty().bind(controller.getCamZoomSlide().valueProperty());
 
 		// create rotation animations
 		// rotate right
-		RotateTransition camRotR = new RotateTransition(Duration.millis(3000), camera);
-		camRotR.setByAngle(360);
+		AddTransition camRotR = new AddTransition(Duration.millis(3000),camRotateY.angleProperty(),360);
 		camRotR.setInterpolator(Interpolator.LINEAR);
 		camRotR.setCycleCount(Animation.INDEFINITE);
 		camRotR.setAutoReverse(false);
-		camRotR.setAxis(new Point3D(0, 1, 0));
 		controller.addCamRotateRightStartListener(camRotR::play);
 		controller.addCamRotateRightStopListener(camRotR::stop);
 
 		// rotate left
-		RotateTransition camRotL = new RotateTransition(Duration.millis(3000), camera);
-		camRotL.setByAngle(-360);
+		AddTransition camRotL = new AddTransition(Duration.millis(3000), camRotateY.angleProperty(), -360);
 		camRotL.setInterpolator(Interpolator.LINEAR);
 		camRotL.setCycleCount(Animation.INDEFINITE);
 		camRotL.setAutoReverse(false);
-		camRotL.setAxis(new Point3D(0, 1, 0));
 		controller.addCamRotateLeftStartListener(camRotL::play);
 		controller.addCamRotateLeftStopListener(camRotL::stop);
+
+		// rotate up
+		AddTransition camRotU = new AddTransition(Duration.millis(3000),camRotateX.angleProperty(),-360);
+		camRotU.setLowerLimit(-90);
+		camRotU.setInterpolator(Interpolator.LINEAR);
+		camRotU.setCycleCount(Animation.INDEFINITE);
+		camRotU.setAutoReverse(false);
+		controller.addCamRotateUpStartListener(camRotU::play);
+		controller.addCamRotateUpStopListener(camRotU::stop);
+
+		// rotate down
+		AddTransition camRotD = new AddTransition(Duration.millis(3000), camRotateX.angleProperty(),360);
+		camRotD.setUpperLimit(90);
+		camRotD.setInterpolator(Interpolator.LINEAR);
+		camRotD.setCycleCount(Animation.INDEFINITE);
+		camRotD.setAutoReverse(false);
+		controller.addCamRotateDownStartListener(camRotD::play);
+		controller.addCamRotateDownStopListener(camRotD::stop);
 
 		// stop all animations when focus is lost
 		primaryStage.focusedProperty().addListener((ov, o, n) -> {
 			if (!n) {
 				camRotR.stop();
 				camRotL.stop();
+				camRotU.stop();
+				camRotD.stop();
 			}
 		});
 
