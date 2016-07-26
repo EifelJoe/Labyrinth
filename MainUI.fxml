@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -135,6 +136,11 @@
 												<Font name="Monospaced Regular" size="11.0" />
 											</font>
 										</TextArea>
+                              <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="210.0" layoutY="11.0" mnemonicParsing="false" styleClass="logNewWindow" text="🗗" textAlignment="CENTER" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <effect>
+                                    <GaussianBlur radius="2.5" />
+                                 </effect>
+                              </Button>
 									</children>
 								</AnchorPane>
 							</content>
