@@ -391,8 +391,23 @@ public class MazeFX extends Application implements UI {
 		Card c = new Card(mm.getShiftCard());
 		PositionType newCardPos = mm.getShiftPosition();
 		int newRotation = c.getOrientation().value();
+		// prevent rotating > 180°
+		int oldRotation = shiftCardC.rotateProperty().intValue();
+		int rotationDelta = newRotation-oldRotation;
+		if(rotationDelta > 180){
+			shiftCardC.rotateProperty().setValue(oldRotation+360);
+		}else if(rotationDelta < -180){
+			shiftCardC.rotateProperty().setValue(oldRotation-360);
+		}
 
 		Translate3D newCardBeforeShiftT = getCardTranslateForShiftStart(newCardPos);
+
+		// before before
+		// TODO: less time for "before before" more time for "before"
+		TranslateTransition animBeforeBefore = new TranslateTransition(durAfter, shiftCardC);
+		//animBeforeBefore.setToX(SHIFT_CARD_TRANSLATE.x);
+		animBeforeBefore.setToY(SHIFT_CARD_TRANSLATE.y);
+		//animBeforeBefore.setToZ(SHIFT_CARD_TRANSLATE.z);
 
 		// before shift
 		RotateTransition cardRotateBeforeT = new RotateTransition(durBefore, shiftCardC);
@@ -401,7 +416,7 @@ public class MazeFX extends Application implements UI {
 		cardTranslateBeforeT.setToX(newCardBeforeShiftT.x);
 		cardTranslateBeforeT.setToY(newCardBeforeShiftT.y);
 		cardTranslateBeforeT.setToZ(newCardBeforeShiftT.z);
-		Animation animBefore = new ParallelTransition(cardRotateBeforeT, cardTranslateBeforeT);
+		Animation animBefore = new ParallelTransition(cardRotateBeforeT, new SequentialTransition(animBeforeBefore,cardTranslateBeforeT));
 
 		// shifting
 		Translate3D shiftTranslate = getCardShiftBy(newCardPos);
@@ -456,7 +471,7 @@ public class MazeFX extends Application implements UI {
 		 * 
 		 * PauseTransition debugTr2 = new PauseTransition(durMove);/
 		 **/
-		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, animAfter, moveAnim);
+		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, /*animAfter,*/ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
 			//System.out.println("yoyo .. done!");

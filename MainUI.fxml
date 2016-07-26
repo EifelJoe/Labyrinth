@@ -62,9 +62,9 @@
 				</StackPane>
 				<VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" HBox.hgrow="NEVER">
 					<children>
-						<TitledPane collapsible="false" styleClass="serverSettingsPane" text="%MazeFX.server">
+						<TitledPane collapsible="false" styleClass="serverSettingsPane" text="%MazeFX.server" VBox.vgrow="NEVER">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+								<AnchorPane minWidth="0.0" prefWidth="200.0">
 									<children>
 										<GridPane hgap="10.0" vgap="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 											<columnConstraints>
@@ -102,13 +102,13 @@
 								</AnchorPane>
 							</content>
 						</TitledPane>
-						<TitledPane collapsible="false" text="%MazeFX.currentGame">
+						<TitledPane collapsible="false" text="%MazeFX.currentGame" VBox.vgrow="NEVER">
 							<content>
-								<AnchorPane minHeight="50.0" minWidth="0.0" prefWidth="200.0" styleClass="currentGamePane">
+								<AnchorPane minWidth="0.0" prefWidth="200.0" styleClass="currentGamePane">
 									<children>
 										<StackPane layoutX="7.0" layoutY="-13.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 											<children>
-												<Label fx:id="playerStatsPlaceholder" text="%MazeFX.noPlayers" textAlignment="CENTER" textFill="#80808080" wrapText="true">
+												<Label fx:id="playerStatsPlaceholder" maxHeight="70.0" minHeight="70.0" prefHeight="70.0" text="%MazeFX.noPlayers" textAlignment="CENTER" textFill="#80808080" wrapText="true">
 													<font>
 														<Font name="System Bold" size="13.0" />
 													</font>
@@ -128,9 +128,9 @@
 						</TitledPane>
 						<TitledPane collapsible="false" maxHeight="1.7976931348623157E308" text="%MazeFX.log" VBox.vgrow="ALWAYS">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" styleClass="logPane">
+								<AnchorPane minHeight="0.0" minWidth="0.0" styleClass="logPane">
 									<children>
-										<TextArea fx:id="logArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="it's quite lonely here ..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+										<TextArea fx:id="logArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" promptText="it's quite lonely here ..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 											<font>
 												<Font name="Monospaced Regular" size="11.0" />
 											</font>
