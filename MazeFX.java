@@ -14,15 +14,13 @@ import de.fhaachen.mazenet.config.Settings;
 import de.fhaachen.mazenet.generated.CardType;
 import de.fhaachen.mazenet.generated.MoveMessageType;
 import de.fhaachen.mazenet.generated.PositionType;
-import de.fhaachen.mazenet.server.Board;
-import de.fhaachen.mazenet.server.Card;
-import de.fhaachen.mazenet.server.Game;
-import de.fhaachen.mazenet.server.Player;
+import de.fhaachen.mazenet.server.*;
 import de.fhaachen.mazenet.server.userInterface.Messages;
 import de.fhaachen.mazenet.server.userInterface.UI;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AddTransition;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Algorithmics;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
 import de.fhaachen.mazenet.tools.Debug;
@@ -91,6 +89,7 @@ public class MazeFX extends Application implements UI {
 	private static final Translate3D SHIFT_CARD_TRANSLATE = new Translate3D(0, -3.3, 0);
 
 	private Game game;
+	private Board board;
 
 	private Stage primaryStage;
 	private Parent root;
@@ -101,6 +100,7 @@ public class MazeFX extends Application implements UI {
 	private CardFX shiftCard;
 	private Map<Integer, PlayerFX> players;
 	private Map<Integer, PlayerStatFX> playerStats = new HashMap<>();
+	private PositionType currentPlayerPos;
 	private PlayerFX currentPlayer;
 
 	private static final double CAM_ROTATE_X_INITIAL = -40;
@@ -139,6 +139,7 @@ public class MazeFX extends Application implements UI {
 
 	private void updatePlayerStats(List<Player> stats, Integer current) {
 		currentPlayer = players.get(current);
+		currentPlayerPos = board.findPlayer(current);
 		stats.forEach(p -> {
 			try {
 				PlayerStatFX stat = playerStats.get(p.getID());
@@ -339,11 +340,13 @@ public class MazeFX extends Application implements UI {
 				}
 			}
 		}
+		this.board = null;
 	}
 
 	private void initFromBoard(Board b) {
 		System.out.println(b);
 		clearBoard();
+		this.board = b;
 		players = new HashMap<>();
 		boardCards = new CardFX[BOARD_HEIGHT][BOARD_WIDTH];
 		for (int z = 0; z < BOARD_HEIGHT; z++) {
@@ -488,6 +491,16 @@ public class MazeFX extends Application implements UI {
 
 	@Override
 	public void displayMove(MoveMessageType mm, Board b, long moveDelay, long shiftDelay, boolean treasureReached) {
+		try {
+			// TODO: maybe improve MoveMessage to save "old" pin position
+			Position from = new Position(currentPlayerPos);
+			Position to = new Position(mm.getNewPinPos());
+			List<Position> path = Algorithmics.findPath(b,from,to);
+			System.out.printf("PATH: %s%n",Algorithmics.pathToString(path));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
 		Platform.runLater(() -> animateMove(mm, b, moveDelay, shiftDelay, treasureReached));
 		long delay = moveDelay + shiftDelay;
 		try {
