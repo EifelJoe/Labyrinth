@@ -437,9 +437,14 @@ public class MazeFX extends Application implements UI {
 		animAfter.setToY(SHIFT_CARD_TRANSLATE.y);
 		animAfter.setToZ(SHIFT_CARD_TRANSLATE.z);
 
+		// todo: place player on board again if shifted "out"
+		// ... should be possible after/while calling updateAndGetShiftedCards(...)
+
 
 		PositionType newPinPos = mm.getNewPinPos();
 
+		// TODO: update player stats to refelct positions after shifting
+		// ... or ... use onFinish, calc position from translate and THEN create further animations ...
 		Timeline moveAnim = createMoveTimeline(mm,b,durMove);
 
 		/*
