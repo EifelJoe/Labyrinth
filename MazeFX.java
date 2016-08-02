@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import de.fhaachen.mazenet.config.Settings;
 import de.fhaachen.mazenet.generated.CardType;
@@ -23,14 +25,10 @@ import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AddTransition;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Algorithmics;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Wrapper;
 import de.fhaachen.mazenet.tools.Debug;
 import de.fhaachen.mazenet.tools.DebugLevel;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -100,7 +98,6 @@ public class MazeFX extends Application implements UI {
 	private CardFX shiftCard;
 	private Map<Integer, PlayerFX> players;
 	private Map<Integer, PlayerStatFX> playerStats = new HashMap<>();
-	private PositionType currentPlayerPos;
 	private PlayerFX currentPlayer;
 
 	private static final double CAM_ROTATE_X_INITIAL = -40;
@@ -134,12 +131,11 @@ public class MazeFX extends Application implements UI {
 	}
 
 	private PlayerStatFX createPlayerStat(int teamId) throws IOException {
-		return new PlayerStatFX(teamId);
+		return new PlayerStatFX(teamId, board);
 	}
 
 	private void updatePlayerStats(List<Player> stats, Integer current) {
 		currentPlayer = players.get(current);
-		currentPlayerPos = board.findPlayer(current);
 		stats.forEach(p -> {
 			try {
 				PlayerStatFX stat = playerStats.get(p.getID());
@@ -147,7 +143,7 @@ public class MazeFX extends Application implements UI {
 					playerStats.put(p.getID(), stat = createPlayerStat(p.getID()));
 					controller.addPlayerStat(stat.root);
 				}
-				stat.update(p);
+				stat.update(p, board);
 				stat.active(false);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -372,7 +368,7 @@ public class MazeFX extends Application implements UI {
 		scene3dRoot.getChildren().add(shiftCard);
 	}
 
-	private void animateMove(MoveMessageType mm, Board b, long mvD, long shifD, boolean treasureReached) {
+	private void animateMove(MoveMessageType mm, Board b, long mvD, long shifD, boolean treasureReached, CountDownLatch lock) {
 		final Duration durBefore = Duration.millis(shifD / 3);
 		final Duration durShift = Duration.millis(shifD / 3);
 		final Duration durAfter = Duration.millis(shifD / 3);
@@ -441,26 +437,10 @@ public class MazeFX extends Application implements UI {
 		animAfter.setToY(SHIFT_CARD_TRANSLATE.y);
 		animAfter.setToZ(SHIFT_CARD_TRANSLATE.z);
 
-		// SequentialTransition completeShiftAnim = new
-		// SequentialTransition(animBefore,animShift,animAfter);
-		// completeShiftAnim.play();
 
-		// unbind player from card and move the pin
-		/*
-		 * ExecuteTransition unbindTr = new ExecuteTransition(()->{
-		 * System.out.println("unbind"); pin.unbindFromCard(); });/
-		 **/
 		PositionType newPinPos = mm.getNewPinPos();
-		Translate3D newPinOffset = pin.getOffset();
-		Translate3D newPinTr = getCardTranslateForPosition(newPinPos.getCol(), newPinPos.getRow())
-				.translate(newPinOffset);
 
-		// TODO: move along actual path (Timeline + Keyframes ?)
-		TranslateTransition moveAnim = new TranslateTransition(durMove, pin);
-		moveAnim.setToX(newPinTr.x);
-		moveAnim.setToY(newPinTr.y);
-		moveAnim.setToZ(newPinTr.z);
-		// moveAnim.play();
+		Timeline moveAnim = createMoveTimeline(mm,b,durMove);
 
 		/*
 		 * ExecuteTransition rebindTr = new ExecuteTransition(()->{
@@ -485,35 +465,67 @@ public class MazeFX extends Application implements UI {
 				boardCards[newPinPos.getRow()][newPinPos.getCol()].getTreasure().treasureFound();
 			}
 			pin.bindToCard(boardCards[newPinPos.getRow()][newPinPos.getCol()]);
+			lock.countDown();
 		});
 		allTr.play();
 	}
 
 	@Override
 	public void displayMove(MoveMessageType mm, Board b, long moveDelay, long shiftDelay, boolean treasureReached) {
+		CountDownLatch lock = new CountDownLatch(1);
+
+		Platform.runLater(() -> {
+			try {
+				animateMove(mm, b, moveDelay, shiftDelay, treasureReached, lock);
+			}catch(Exception e){
+				lock.countDown();
+			}
+		});
+
+		// make it blocking!
+		do {
+			try {
+				lock.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}while(lock.getCount()!=0);
+	}
+
+	private Timeline createMoveTimeline(MoveMessageType mm, Board b, Duration moveDelay){
+		PlayerFX pin = currentPlayer;
+		PositionType playerPosition = playerStats.get(pin.playerId).getPosition();
+		List<Position> positions;
 		try {
 			// TODO: maybe improve MoveMessage to save "old" pin position
-			Position from = new Position(currentPlayerPos);
+			Position from = new Position(playerPosition);
 			Position to = new Position(mm.getNewPinPos());
-			List<Position> path = Algorithmics.findPath(b,from,to);
-			System.out.printf("PATH: %s%n",Algorithmics.pathToString(path));
+			positions = Algorithmics.findPath(b,from,to);
+			System.out.printf("PATH: %s%n",Algorithmics.pathToString(positions));
 		}catch(Exception e){
 			e.printStackTrace();
+			positions = new LinkedList<>();
 		}
 
-		Platform.runLater(() -> animateMove(mm, b, moveDelay, shiftDelay, treasureReached));
-		long delay = moveDelay + shiftDelay;
-		try {
-			Thread.sleep(delay);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Wrapper<Integer> frameNo = new Wrapper<>(0);
+		List<KeyFrame> frames = positions.stream().sequential().map(p->{
+			Translate3D newPinOffset = pin.getOffset();
+			Translate3D newPinTr = getCardTranslateForPosition(p.getCol(), p.getRow())
+					.translate(newPinOffset);
+
+			return new KeyFrame(moveDelay.multiply(++frameNo.val),
+					new KeyValue(pin.translateXProperty(),newPinTr.x),
+					new KeyValue(pin.translateYProperty(),newPinTr.y),
+					new KeyValue(pin.translateZProperty(),newPinTr.z)
+				);
+		}).collect(Collectors.toList());
+		System.out.println(frames);
+		return new Timeline(frames.toArray(new KeyFrame[0]));
 	}
 
 	@Override
 	public void updatePlayerStatistics(List<Player> stats, Integer current) {
 		Platform.runLater(() -> this.updatePlayerStats(stats, current));
-
 	}
 
 	@Override

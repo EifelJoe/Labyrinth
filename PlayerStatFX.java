@@ -1,5 +1,7 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX;
 
+import de.fhaachen.mazenet.generated.PositionType;
+import de.fhaachen.mazenet.server.Board;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import de.fhaachen.mazenet.server.Player;
@@ -17,8 +19,9 @@ public class PlayerStatFX {
 	public final Node root;
 	private int treasureFound;
 	private int cachedTreasuresRemaining;
+	private PositionType position;
 
-	public PlayerStatFX(int playerId) throws IOException {
+	public PlayerStatFX(int playerId, Board board) throws IOException {
 		this.playerId = playerId;
 
 		FXMLLoader fxmlLoader = new FXMLLoader();
@@ -29,9 +32,10 @@ public class PlayerStatFX {
 		// da die Nummer der zu suchenden Schätze 
 		// nicht bekannt ist wird zuerst auf 0 erhöht
 		treasureFound = -1;
+		position = board.findPlayer(playerId);
 	}
 
-	public void update(Player p) {
+	public void update(Player p, Board board) {
 		if (!(cachedTreasuresRemaining == p.treasuresToGo())) {
 			controller.setNumFound(++treasureFound);
 		}
@@ -40,9 +44,14 @@ public class PlayerStatFX {
 		controller.setPlayerName(p.getName());
 		controller.setNumRemaining(p.treasuresToGo());
 		controller.setTreasureImage(p.getCurrentTreasure().value());
+		position = board.findPlayer(playerId);
 	}
 	public void active(boolean act){
 		controller.setActive(act);
+	}
+
+	public PositionType getPosition(){
+		return position;
 	}
 
 }
