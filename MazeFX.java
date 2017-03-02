@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import de.fhaachen.mazenet.config.Settings;
@@ -19,6 +18,8 @@ import de.fhaachen.mazenet.generated.PositionType;
 import de.fhaachen.mazenet.server.*;
 import de.fhaachen.mazenet.server.userInterface.Messages;
 import de.fhaachen.mazenet.server.userInterface.UI;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AnimationFactory;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.data.VectorInt2;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AddTransition;
@@ -26,6 +27,7 @@ import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Algorithmics;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Translate3D;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Wrapper;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.util.MoveStateCalculator;
 import de.fhaachen.mazenet.tools.Debug;
 import de.fhaachen.mazenet.tools.DebugLevel;
 import javafx.animation.*;
@@ -369,11 +371,28 @@ public class MazeFX extends Application implements UI {
 	}
 
 	private void animateMove(MoveMessageType mm, Board b, long mvD, long shifD, boolean treasureReached, CountDownLatch lock) {
+
 		final Duration durBefore = Duration.millis(shifD / 3);
 		final Duration durShift = Duration.millis(shifD / 3);
 		final Duration durAfter = Duration.millis(shifD / 3);
 
 		final Duration durMove = Duration.millis(mvD);
+
+		MoveStateCalculator msc = new MoveStateCalculator(mm, b);
+		List<VectorInt2> shiftedCardsPos = msc.getCardsToShift();
+		VectorInt2 pushedOutCardPos = msc.getPushedOutPlayersPosition();
+		VectorInt2 pushedOutNewPos = msc.getNewPlayerPosition();
+		VectorInt2 shiftCardStart = msc.getShiftCardStart();
+		VectorInt2 shiftDelta = msc.getShiftDelta();
+
+		List<CardFX> shiftCards = shiftedCardsPos.stream().map(v->boardCards[v.y][v.x]).collect(Collectors.toList());
+		shiftCards.add(shiftCard);
+		CardFX pushedOutCard = boardCards[pushedOutCardPos.y][pushedOutCardPos.x];
+		List<PlayerFX> pushedOutPlayers = players.values().stream().filter(p->p.getBoundCard()==pushedOutCard).collect(Collectors.toList());
+		Translate3D pushedOutPlayersMoveTo = getCardTranslateForPosition(pushedOutNewPos.x,pushedOutNewPos.y);
+		Animation movePushedOutPlayers = AnimationFactory.moveShiftedOutPlayers(
+				pushedOutPlayers,pushedOutPlayersMoveTo,shiftCard,durMove.multiply(4));
+
 
 		System.out.println(players);
 		System.out.println(currentPlayer);
@@ -399,7 +418,7 @@ public class MazeFX extends Application implements UI {
 			shiftCardC.rotateProperty().setValue(oldRotation-360);
 		}
 
-		Translate3D newCardBeforeShiftT = getCardTranslateForShiftStart(newCardPos);
+		Translate3D newCardBeforeShiftT = getCardTranslateForPosition(shiftCardStart.x,shiftCardStart.y); //getCardTranslateForShiftStart(newCardPos);
 
 		// before before
 		// TODO: less time for "before before" more time for "before"
@@ -418,8 +437,9 @@ public class MazeFX extends Application implements UI {
 		Animation animBefore = new ParallelTransition(cardRotateBeforeT, new SequentialTransition(animBeforeBefore,cardTranslateBeforeT));
 
 		// shifting
-		Translate3D shiftTranslate = getCardShiftBy(newCardPos);
-		List<CardFX> shiftCards = updateAndGetShiftedCards(newCardPos);
+		// invert delta shift, because graphics coordinates are the other way round!
+		Translate3D shiftTranslate = new Translate3D(shiftDelta.x, 0, -shiftDelta.y);//getCardShiftBy(newCardPos);
+		/*List<CardFX> shiftCards = */updateAndGetShiftedCards(newCardPos);
 		Animation[] shiftAnims = new Animation[shiftCards.size()];
 		int i = 0;
 		for (CardFX crd : shiftCards) {
@@ -459,7 +479,7 @@ public class MazeFX extends Application implements UI {
 		 * 
 		 * PauseTransition debugTr2 = new PauseTransition(durMove);/
 		 **/
-		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, /*animAfter,*/ moveAnim);
+		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, /*animAfter,*/ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
 			//System.out.println("yoyo .. done!");
@@ -470,6 +490,8 @@ public class MazeFX extends Application implements UI {
 				boardCards[newPinPos.getRow()][newPinPos.getCol()].getTreasure().treasureFound();
 			}
 			pin.bindToCard(boardCards[newPinPos.getRow()][newPinPos.getCol()]);
+
+
 			lock.countDown();
 		});
 		allTr.play();

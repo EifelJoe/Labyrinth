@@ -171,9 +171,9 @@ public class MoveStateCalculator {
             return new VectorInt2(-1, 0);
 
         if (position.getRow() == 0)
-            return new VectorInt2(0, -1);
-        if (position.getRow() == BOARD_HEIGHT - 1)
             return new VectorInt2(0, 1);
+        if (position.getRow() == BOARD_HEIGHT - 1)
+            return new VectorInt2(0, -1);
 
         return new VectorInt2(0, 0); // no idea!
     }
