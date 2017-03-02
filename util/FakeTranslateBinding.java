@@ -1,5 +1,6 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
 
+import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Translate3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 

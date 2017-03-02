@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhaachen.mazenet.server.userInterface.mazeFX.animations;
 
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;

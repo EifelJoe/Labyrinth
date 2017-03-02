@@ -1,7 +1,7 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX.objects;
 
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Translate3D;
+import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Translate3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
