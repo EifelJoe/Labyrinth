@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_PlayerStat">
+<?import java.lang.String?>
+<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhac.mazenet.server.userinterface.mazeFX.C_PlayerStat">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="25.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
