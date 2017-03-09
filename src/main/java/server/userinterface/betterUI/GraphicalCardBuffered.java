@@ -1,4 +1,4 @@
-package server.userinterface;
+package server.userinterface.betterUI;
 
 import java.awt.Color;
 import java.awt.Dimension;

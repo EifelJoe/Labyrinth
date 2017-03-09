@@ -1,4 +1,4 @@
-package server.userinterface;
+package server.userinterface.betterUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,6 +45,7 @@ import server.Position;
 import server.tools.Debug;
 import server.tools.DebugLevel;
 import server.Messages;
+import server.userinterface.UI;
 
 public class BetterUI extends JFrame implements UI {
 

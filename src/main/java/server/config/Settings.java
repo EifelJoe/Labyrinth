@@ -5,9 +5,10 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 
-import server.userinterface.BetterUI;
+import server.userinterface.betterUI.BetterUI;
 import server.userinterface.UI;
 import server.tools.DebugLevel;
+import server.userinterface.mazeFX.MazeFX;
 
 public class Settings {
 	/**
@@ -90,8 +91,20 @@ public class Settings {
 		SENDTIMEOUT = Integer.parseInt(prop.get("SENDTIMEOUT").toString());//.split(" * ")[0])*Integer.parseInt(prop.get("SENDTIMEOUT").toString().split(" * ")[1])*Integer.parseInt(prop.get("SENDTIMEOUT").toString().split(" * ")[2]); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 		SHIFTDELAY = Integer.parseInt(prop.get("SHIFTDELAY").toString()); 
 		TESTBOARD = Boolean.parseBoolean(prop.get("TESTBOARD").toString()); //$NON-NLS-1$
-		TESTBOARD_SEED = Integer.parseInt(prop.get("TESTBOARD_SEED").toString()); 
-		USERINTERFACE = prop.get("USERINTERFACE").toString().equals("BetterUI")?new BetterUI():null; //$NON-NLS-1$ //$NON-NLS-2$
+		TESTBOARD_SEED = Integer.parseInt(prop.get("TESTBOARD_SEED").toString());
+		String ui=prop.get("USERINTERFACE").toString();
+		switch(ui){
+			case "BetterUI":
+				USERINTERFACE=new BetterUI();
+				break;
+			case "MazeFX":
+				USERINTERFACE=MazeFX.newInstance();
+				break;
+			default:
+				USERINTERFACE=null;
+				break;
+
+		}
 		//print();
 	}
 	

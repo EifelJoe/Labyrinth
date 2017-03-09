@@ -1,4 +1,4 @@
-package server.userinterface;
+package server.userinterface.betterUI;
 
 import java.io.IOException;
 import java.io.OutputStream;
