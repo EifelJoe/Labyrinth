@@ -17,33 +17,40 @@ public class PlayerFX extends Sphere {
     private CardFX boundCard;
     private FakeTranslateBinding binding;
     private PhongMaterial material;
+    private int playerID;
 
-    private PlayerFX(){
+    private PlayerFX() {
         super(RADIUS);
         material = new PhongMaterial(Color.WHITE);
         setMaterial(material);
+        playerID = 0;
     }
 
-    public PlayerFX(int id, CardFX card){
+    public PlayerFX(int id, CardFX card) {
         this();
+        playerID = id;
         material.setDiffuseColor(playerIdToColor(id));
         bindToCard(card);
     }
 
-    public CardFX getBoundCard(){
+    public CardFX getBoundCard() {
         return boundCard;
     }
 
-    public void bindToCard(CardFX card){
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public void bindToCard(CardFX card) {
         /*translateXProperty().bind(card.translateXProperty());
         translateYProperty().bind(Bindings.add(OFFSET_Y,card.translateYProperty()));
         translateZProperty().bind(card.translateZProperty());*/
-        if(binding!=null) unbindFromCard();
-        binding = new FakeTranslateBinding(this,card,getOffset()).bind();
-        boundCard=card;
+        if (binding != null) unbindFromCard();
+        binding = new FakeTranslateBinding(this, card, getOffset()).bind();
+        boundCard = card;
     }
 
-    public void unbindFromCard(){
+    public void unbindFromCard() {
         boundCard = null;
         binding.unbind();
         binding = null;
@@ -55,11 +62,11 @@ public class PlayerFX extends Sphere {
         setTranslateZ(getTranslateZ());/**/
     }
 
-    public Translate3D getOffset(){
-        return new Translate3D(0,OFFSET_Y,0);
+    public Translate3D getOffset() {
+        return new Translate3D(0, OFFSET_Y, 0);
     }
 
-    public static Color playerIdToColor(int id){
+    public static Color playerIdToColor(int id) {
         switch (id) {
             case 0:
                 return Color.YELLOW;
