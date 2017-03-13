@@ -6,11 +6,17 @@
     <artifactId>maze-server</artifactId>
     <version>ss2016</version>
     <name>maze-server</name>
-    <url>http://maven.apache.org</url>
+    <url>https://git.noc.fh-aachen.de/mazenet/maze-server</url>
+
+    <scm>
+        <developerConnection>scm:git:https://git.noc.fh-aachen.de/mazenet/maze-server.git</developerConnection>
+        <url>https://git.noc.fh-aachen.de/mazenet/maze-server</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
 
     <build>
         <resources>
@@ -23,6 +29,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -31,6 +38,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -40,24 +48,40 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <executable>maven</executable>
+                    <!-- optional -->
+                    <mainClass>de.fhac.mazenet.server.Game</mainClass>
+                    <workingDirectory>/tmp</workingDirectory>
+                    <arguments>
+                        <argument>-X</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>
     </build>
     <packaging>jar</packaging>
+    <distributionManagement>
+        <repository>
+            <id>mazenet-release-repo</id>
+            <name>Mazenet Release Repository</name>
+            <url>https://git.noc.fh-aachen.de/mazenet/maven-repo/raw/release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>mazenet-snapshot-repo</id>
+            <url>https://git.noc.fh-aachen.de/mazenet/maven-repo/raw/snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 
     <dependencies>
@@ -68,6 +92,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
 </project>
