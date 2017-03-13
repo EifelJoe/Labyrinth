@@ -343,12 +343,12 @@ public class MazeFX extends Application implements UI {
 
         final PlayerFX pin = currentPlayer != null ? currentPlayer : players.getOrDefault(1, null);
         FakeTranslateBinding pinBind = null;
-        if (pin.getBoundCard() != null) {
-            pinBind = new FakeTranslateBinding(pin, pin.getBoundCard(), pin.getOffset());
-            pin.unbindFromCard();
-            pinBind.bind();
-        }
-        FakeTranslateBinding pinBind_final = pinBind;
+        //if (pin.getBoundCard() != null) {
+        //    pinBind = new FakeTranslateBinding(pin, pin.getBoundCard(), pin.getOffset());
+        //    pin.unbindFromCard();
+        //    pinBind.bind();
+        //}
+        //FakeTranslateBinding pinBind_final = pinBind;
 
         CardFX shiftCardC = shiftCard;
         Card c = new Card(mm.getShiftCard());
@@ -414,13 +414,13 @@ public class MazeFX extends Application implements UI {
         allTr.setInterpolator(Interpolator.LINEAR);
         allTr.setOnFinished(e -> {
             //System.out.println("yoyo .. done!");
-            if (pinBind_final != null) {
-                pinBind_final.unbind();
+            //if (pinBind_final != null) {
+            //    pinBind_final.unbind();
+            //}
+            if (treasureReached) {
+                boardCards[mm.getNewPinPos().getRow()][mm.getNewPinPos().getCol()].getTreasure().treasureFound();
             }
-//            if (treasureReached) {
-//                boardCards[finalPinPos.getRow()][finalPinPos.getCol()].getTreasure().treasureFound();
-//            }
-//            pin.bindToCard(boardCards[finalPinPos.getRow()][finalPinPos.getCol()]);
+            pin.bindToCard(boardCards[mm.getNewPinPos().getRow()][mm.getNewPinPos().getCol()]);
         });
         allTr.play();
 
