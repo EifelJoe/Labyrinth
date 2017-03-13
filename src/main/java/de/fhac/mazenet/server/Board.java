@@ -386,8 +386,8 @@ public class Board extends BoardType {
         Position sm = new Position(movePosition);
         // Ueberpruefen ob das Reinschieben der Karte gueltig ist
         if (!sm.isLoosePosition() || sm.equals(forbidden)) {
-            System.err.println(Messages
-                    .getString("Board.forbiddenPostitionShiftCard")); //$NON-NLS-1$
+            System.err.println(String.format(Messages
+                    .getString("Board.forbiddenPostitionShiftCard"), movePosition.getRow(), movePosition.getCol())); //$NON-NLS-1$
             return false;
         }
         Card sc = new Card(moveShiftCard);
@@ -410,10 +410,12 @@ public class Board extends BoardType {
         Debug.print(fakeBoard.toString(), DebugLevel.DEBUG);
         if (fakeBoard.pathPossible(playerPosition, move.getNewPinPos())) {
             Debug.print(
-                    Messages.getString("Board.illegalMove"), DebugLevel.VERBOSE); //$NON-NLS-1$
+                    Messages.getString("Board.legalMove"), DebugLevel.VERBOSE); //$NON-NLS-1$
             return true;
         }
-        Debug.print(Messages.getString("Board.positionNotReachable"), //$NON-NLS-1$
+        Debug.print(String.format(Messages.getString("Board.positionNotReachable"), move
+                        .getNewPinPos().getRow(), move.getNewPinPos()
+                        .getCol()), //$NON-NLS-1$
                 DebugLevel.DEFAULT);
         return false;
     }
@@ -428,41 +430,52 @@ public class Board extends BoardType {
         return getAllReachablePositions(oldP).contains(newP);
     }
 
-    public List<PositionType> getAllReachablePositions(PositionType position) {
+    public List<Position> getAllReachablePositions(PositionType position) {
         Debug.print(
                 Messages.getString("Board.getAllReachablePositionsFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
-        List<PositionType> erreichbarePositionen = new ArrayList<PositionType>();
-        int[][] erreichbar = getAllReachablePositionsMatrix(position);
+        List<Position> erreichbarePositionen = new ArrayList<Position>();
+        PathInfo[][] erreichbar = getAllReachablePositionsMatrix(position);
         for (int i = 0; i < erreichbar.length; i++) {
             for (int j = 0; j < erreichbar[0].length; j++) {
-                if (erreichbar[i][j] > -1) {
+                System.out.printf("%2d ",erreichbar[i][j].getStepsFromSource());
+                if (erreichbar[i][j].getStepsFromSource() > -1) {
                     erreichbarePositionen.add(new Position(i, j));
                 }
             }
+            System.out.println();
         }
+        for (Position p : erreichbarePositionen) {
+            System.out.print("P: " + p);
+        }
+        System.out.println();
         return erreichbarePositionen;
     }
 
-    public int[][] getAllReachablePositionsMatrix(PositionType position) {
-        int[][] erreichbar = new int[7][7];
-        for (int[] row : erreichbar)
-            Arrays.fill(row, -1);
-        return getAllReachablePositionsMatrix(position, erreichbar, 0);
+    public PathInfo[][] getAllReachablePositionsMatrix(PositionType position) {
+        PathInfo[][] erreichbar = new PathInfo[7][7];
+        for (int i = 0; i < erreichbar.length; i++) {
+            for (int j = 0; j < erreichbar[i].length; j++) {
+                erreichbar[i][j]=new PathInfo();
+            }
+        }
+        return getAllReachablePositionsMatrix(new Position(position), erreichbar, 0, null);
     }
 
-    private int[][] getAllReachablePositionsMatrix(PositionType position,
-                                                   int[][] erreichbar, int step) {
-        erreichbar[position.getRow()][position.getCol()] = step;
-        for (PositionType p1 : getDirectReachablePositions(position)) {
-            if (erreichbar[p1.getRow()][p1.getCol()] < 0 || erreichbar[p1.getRow()][p1.getCol()] > step + 1) {
-                getAllReachablePositionsMatrix(p1, erreichbar, step + 1);
+    private PathInfo[][] getAllReachablePositionsMatrix(Position position,
+                                                        PathInfo[][] erreichbar, int step, Position cameFrom) {
+        erreichbar[position.getRow()][position.getCol()].setStepsFromSource(step);
+        erreichbar[position.getRow()][position.getCol()].setCameFrom(cameFrom);
+        final List<Position> directReachablePositions = getDirectReachablePositions(position);
+        for (Position p1 : directReachablePositions) {
+            if (erreichbar[p1.getRow()][p1.getCol()].getStepsFromSource() < 0 || erreichbar[p1.getRow()][p1.getCol()].getStepsFromSource() > step + 1) {
+                getAllReachablePositionsMatrix(p1, erreichbar, step + 1, position);
             }
         }
         return erreichbar;
     }
 
-    private List<PositionType> getDirectReachablePositions(PositionType position) {
-        List<PositionType> positionen = new ArrayList<PositionType>();
+    private List<Position> getDirectReachablePositions(PositionType position) {
+        List<Position> positionen = new ArrayList<Position>();
         CardType k = this.getCard(position.getRow(), position.getCol());
         CardType.Openings openings = k.getOpenings();
         if (openings.isLeft()) {
@@ -500,15 +513,13 @@ public class Board extends BoardType {
         return positionen;
     }
 
-    public PositionType findPlayer(Integer PlayerID) {
+    public Position findPlayer(Integer PlayerID) {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 CardType.Pin pinsOnCard = getCard(i, j).getPin();
                 for (Integer pin : pinsOnCard.getPlayerID()) {
                     if (pin == PlayerID) {
-                        PositionType pos = new PositionType();
-                        pos.setCol(j);
-                        pos.setRow(i);
+                        Position pos = new Position(i,j);
                         return pos;
                     }
                 }

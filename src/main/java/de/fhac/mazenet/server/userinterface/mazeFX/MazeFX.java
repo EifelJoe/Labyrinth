@@ -334,7 +334,7 @@ public class MazeFX extends Application implements UI {
         scene3dRoot.getChildren().add(shiftCard);
     }
 
-    private void animateMove(MoveMessageType mm, Board b, List<PositionType> path, long mvD, long shifD, boolean treasureReached) {
+    private void animateMove(MoveMessageType mm, Board b, List<Position> path, long mvD, long shifD, boolean treasureReached) {
         final Duration durBefore = Duration.millis(shifD / 3);
         final Duration durShift = Duration.millis(shifD / 3);
         final Duration durAfter = Duration.millis(shifD / 3);
@@ -440,29 +440,20 @@ public class MazeFX extends Application implements UI {
 
     }
 
-    private List<PositionType> getPathtoPosition(PositionType target, final int[][] reachableMatrix) {
-        List<PositionType> path = new LinkedList<>();
-        int stepsToGo = reachableMatrix[target.getRow()][target.getCol()];
+    private List<Position> getPathtoPosition(Position target, final PathInfo[][] reachableMatrix) {
+        List<Position> path = new LinkedList<>();
+        int stepsToGo = reachableMatrix[target.getRow()][target.getCol()].getStepsFromSource();
         // System.out.println("stepstogo: " + stepsToGo);
         if (stepsToGo == 0) {
             return path;
         } else {
-            for (int i = Math.max(target.getRow() - 1, 0); i < Math.min(target.getRow() + 2, 7); i++) {
-                for (int j = Math.max(target.getCol() - 1, 0); j < Math.min(target.getCol() + 2, 7); j++) {
-                    if (reachableMatrix[i][j] == (stepsToGo - 1)) {
-                        List<PositionType> toGo = getPathtoPosition(new Position(i, j), reachableMatrix);
-                        for (PositionType p : toGo) {
-                            path.add(p);
-                        }
-                        path.add(target);
-                        return path;
-                    }
-                }
+            List<Position> toGo = getPathtoPosition(reachableMatrix[target.getRow()][target.getCol()].getCameFrom(), reachableMatrix);
+            for (Position p : toGo) {
+                path.add(p);
             }
+            path.add(target);
+            return path;
         }
-        path.add(target);
-
-        return path;
     }
 
     @Override
@@ -472,7 +463,7 @@ public class MazeFX extends Application implements UI {
 
         PositionType finalPinPos = mm.getNewPinPos();
         PositionType currentPosition = boardFromLastTurn.findPlayer(currentPlayer.getPlayerID());
-        int[][] reach = boardFromLastTurn.getAllReachablePositionsMatrix(currentPosition);
+        PathInfo[][] reach = boardFromLastTurn.getAllReachablePositionsMatrix(new Position(currentPosition));
 
         /*   Debug  */
         /*
@@ -498,11 +489,11 @@ public class MazeFX extends Application implements UI {
         System.out.println("try to reach: "+finalPinPos.getRow()+"/"+finalPinPos.getCol());
         /* Debug Ende */
 
-        List<PositionType> path = getPathtoPosition(finalPinPos, reach);
+        List<Position> path = getPathtoPosition(new Position(finalPinPos), reach);
 
         System.out.print("Pfad: ");
         for (PositionType p : path) {
-            System.out.print("(" + p.getRow() + "/" + p.getCol()+") ");
+            System.out.print("(" + p.getRow() + "/" + p.getCol() + ") ");
         }
         System.out.println();
 
@@ -526,7 +517,7 @@ public class MazeFX extends Application implements UI {
 
     @Override
     public void init(Board b) {
-        boardFromLastTurn= (Board) b.clone();
+        boardFromLastTurn = (Board) b.clone();
         // Needed to avoid JavaFX initialition Errors
         // see https://rterp.wordpress.com/2015/04/04/javafx-toolkit-not-initialized-solved/
         //JFXPanel startJFX=new JFXPanel();
