@@ -23,6 +23,8 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd`are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  GIT_SUBMODULE_STRATEGY: recursive
+
 
 # Cache downloaded dependencies and plugins between builds.
 cache:
@@ -61,8 +63,7 @@ verify:jdk8:
 # To get this working you need to define a volume while configuring your gitlab-ci-multi-runner.
 # Mount your `settings.xml` as `/root/.m2/settings.xml` which holds your secrets.
 # See https://maven.apache.org/settings.html
-deploy:jdk8:
-  # Use stage test here, so the pages job may later pickup the created site.
+deploy-release:jdk8:
   stage: deploy
   script:
     - 'mvn $MAVEN_CLI_OPTS deploy'
@@ -72,11 +73,19 @@ deploy:jdk8:
     - 'git push origin release'
   only:
     - master
-  # Archive up the built documentation site.
-  artifacts:
-    paths:
-    - target/staging
   image: hbongen/openjfx-maven
+
+deploy-snapshot:jdk8:
+    stage: deploy
+    script:
+      - 'mvn $MAVEN_CLI_OPTS deploy'
+      - 'cd mvn-repo/snapshot'
+      - 'git add .'
+      - 'git commit -m "New Snapshot (done by CI)"'
+      - 'git push origin snapshot'
+    only:
+      - develop
+    image: hbongen/openjfx-maven
 
 
 #pages:
