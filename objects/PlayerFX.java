@@ -13,7 +13,9 @@ public class PlayerFX extends Sphere {
 
     private static final double RADIUS = 0.15;
     private static final double OFFSET_Y = -0.4;
+    private static final double PLAYER_SPECIFIC_OFFSET = 0.15;
 	public final int playerId;
+	public final Translate3D playerSpecificOffset;
 
     private CardFX boundCard;
     private FakeTranslateBinding binding;
@@ -23,12 +25,14 @@ public class PlayerFX extends Sphere {
         super(RADIUS);
         material = new PhongMaterial(Color.WHITE);
         setMaterial(material);
+        Color c = playerIdToColor(id);
+        material.setDiffuseColor(c);
 	    this.playerId = id;
+	    this.playerSpecificOffset = playerIdToOffset(id);
     }
 
     public PlayerFX(int id, CardFX card){
         this(id);
-        material.setDiffuseColor(playerIdToColor(id));
         bindToCard(card);
     }
 
@@ -58,23 +62,37 @@ public class PlayerFX extends Sphere {
     }
 
     public Translate3D getOffset(){
-        return new Translate3D(0,OFFSET_Y,0);
+        return new Translate3D(0,OFFSET_Y,0).translate(playerSpecificOffset);
     }
 
     public static Color playerIdToColor(int id){
         switch (id) {
-            case 0:
-                return Color.YELLOW;
             case 1:
-                return Color.GREEN;
+                return Color.LIMEGREEN;
             case 2:
-                return Color.BLACK;
+                return Color.grayRgb(64);
             case 3:
                 return Color.RED;
             case 4:
-                return Color.BLUE;
+                return Color.DODGERBLUE;
             default:
                 return Color.WHITESMOKE;
+        }
+    }
+
+    public static Translate3D playerIdToOffset(int id){
+
+        switch (id) {
+            case 1:
+                return new Translate3D(-PLAYER_SPECIFIC_OFFSET,0, -PLAYER_SPECIFIC_OFFSET);
+            case 2:
+                return new Translate3D(+PLAYER_SPECIFIC_OFFSET,0, +PLAYER_SPECIFIC_OFFSET);
+            case 3:
+                return new Translate3D(-PLAYER_SPECIFIC_OFFSET,0,+PLAYER_SPECIFIC_OFFSET);
+            case 4:
+                return new Translate3D(+PLAYER_SPECIFIC_OFFSET,0, -PLAYER_SPECIFIC_OFFSET);
+            default:
+                return new Translate3D(0,0, 0);
         }
     }
 }

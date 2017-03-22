@@ -102,8 +102,8 @@ public class MazeFX extends Application implements UI {
 	private Map<Integer, PlayerStatFX> playerStats = new HashMap<>();
 	private PlayerFX currentPlayer;
 
-	private static final double CAM_ROTATE_X_INITIAL = -40;
-	private static final double CAM_ROTATE_Y_INITIAL = 15;
+	private static final double CAM_ROTATE_X_INITIAL = -50;
+	private static final double CAM_ROTATE_Y_INITIAL = 0;
 	private Rotate camRotateX = new Rotate(CAM_ROTATE_X_INITIAL, Rotate.X_AXIS);
 	private Rotate camRotateY = new Rotate(CAM_ROTATE_Y_INITIAL, Rotate.Y_AXIS);
 
@@ -249,7 +249,7 @@ public class MazeFX extends Application implements UI {
 
 		// add stuff to scene graph
 		scene3dRoot.getChildren().add(camera);
-		sub3d.setFill(Color.ANTIQUEWHITE);
+		sub3d.setFill(Color.WHITESMOKE);
 		sub3d.setCamera(camera);
 
 		Box c1 = new Box(1, 0.1, 1);
