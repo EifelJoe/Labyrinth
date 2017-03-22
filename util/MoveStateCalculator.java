@@ -150,6 +150,22 @@ public class MoveStateCalculator {
         return newPlayerPosition;
     }
 
+    /**
+     * Calculates the position a pin has after shifting and before moving, based on the position it has before shifting.
+     *
+     * @param preShiftPos Player's position before using the shift card
+     * @return Player's position after shifting
+     */
+    public VectorInt2 getPlayerPositionAfterShift(VectorInt2 preShiftPos){
+        if(!getCardsToShift().contains(preShiftPos)){
+            return preShiftPos;
+        }
+        if(preShiftPos.equals(getPushedOutPlayersPosition())){
+            return getNewPlayerPosition();
+        }
+        return preShiftPos.translate(getShiftDelta());
+    }
+
     /* *************************************************************
     ********                HELPER FUNCTIONS                ********
     ****************************************************************/

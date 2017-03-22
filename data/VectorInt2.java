@@ -37,4 +37,13 @@ public class VectorInt2 {
         return new VectorInt2(pt.getCol(), pt.getRow());
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return other != null && other instanceof VectorInt2 && equals((VectorInt2) other);
+    }
+
+    private boolean equals(VectorInt2 other){
+        return other!=null && other.x==this.x && other.y==this.y;
+    }
+
 }

@@ -465,7 +465,7 @@ public class MazeFX extends Application implements UI {
 
 		// TODO: update player stats to refelct positions after shifting
 		// ... or ... use onFinish, calc position from translate and THEN create further animations ...
-		Timeline moveAnim = createMoveTimeline(mm,b,durMove);
+		Timeline moveAnim = createMoveTimeline(mm,b,durMove,msc);
 
 		/*
 		 * ExecuteTransition rebindTr = new ExecuteTransition(()->{
@@ -519,13 +519,16 @@ public class MazeFX extends Application implements UI {
 		}while(lock.getCount()!=0);
 	}
 
-	private Timeline createMoveTimeline(MoveMessageType mm, Board b, Duration moveDelay){
+	private Timeline createMoveTimeline(MoveMessageType mm, Board b, Duration moveDelay, MoveStateCalculator msc){
 		PlayerFX pin = currentPlayer;
+
 		PositionType playerPosition = playerStats.get(pin.playerId).getPosition();
+		VectorInt2 preShiftPos = VectorInt2.copy(playerPosition);
+		VectorInt2 postShiftPos = msc.getPlayerPositionAfterShift(preShiftPos);
 		List<Position> positions;
 		try {
 			// TODO: maybe improve MoveMessage to save "old" pin position
-			Position from = new Position(playerPosition);
+			Position from = new Position(postShiftPos.y, postShiftPos.x);
 			Position to = new Position(mm.getNewPinPos());
 			positions = Algorithmics.findPath(b,from,to);
 			System.out.printf("PATH: %s%n",Algorithmics.pathToString(positions));
