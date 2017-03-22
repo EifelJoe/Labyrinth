@@ -62,6 +62,6 @@ public class AnimationFactory {
 			});
 		});
 
-		return new SequentialTransition(moveUp,moveXZ,moveDown/*,updateBinding*/);
+		return new SequentialTransition(moveUp,moveXZ,moveDown,updateBinding);
 	}
 }

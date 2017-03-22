@@ -25,7 +25,7 @@ public class ExecuteTransition extends Transition {
 
     @Override
     protected void interpolate(double frac) {
-        if(!alreadyExecuted){
+        if(!alreadyExecuted && this.statusProperty().get()==Status.RUNNING){
             System.out.printf("ip: %f%n",frac);
             alreadyExecuted=true;
             runnable.run();
