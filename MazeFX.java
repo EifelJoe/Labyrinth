@@ -575,6 +575,13 @@ public class MazeFX extends Application implements UI {
 
 	@Override
 	public void gameEnded(Player winner) {
-		controller.gameStopped();
+		Platform.runLater(() -> {
+			controller.gameStopped();
+			int playerId = winner.getID();
+			PlayerStatFX stats = playerStats.get(playerId);
+			stats.setWinner();
+			controller.showWinner(stats.getPlayer().getName());
+		});
+
 	}
 }

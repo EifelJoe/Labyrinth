@@ -1,29 +1,25 @@
 package de.fhaachen.mazenet.server.userInterface.mazeFX;
 
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import de.fhaachen.mazenet.config.Settings;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.BetterOutputStream;
 import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
 import de.fhaachen.mazenet.tools.Debug;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.effect.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Richard Zameitat on 25.05.2016.
@@ -65,6 +61,15 @@ public class C_MainUI implements Initializable {
 
     @FXML
     private Label playerStatsPlaceholder;
+
+    @FXML
+    private BorderPane winnerPanel;
+
+    @FXML
+    private Label winnerText;
+
+    @FXML
+    private Label winnerPlayer;
     
     public int getMaxPlayer(){
     	return maxPlayer.getValue().intValue();
@@ -198,14 +203,73 @@ public class C_MainUI implements Initializable {
     }
 
     public void clearPlayerStats(){
+        hideWinner();
         playerStatsContrainer.getChildren().clear();
         playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size()*60);
 
     }
-    
+
+    public void showWinner(String name){
+        winnerPlayer.setText(name);
+        winnerPanel.setVisible(true);
+    }
+
+    public void hideWinner(){
+        winnerPanel.setVisible(false);
+    }
+
+    private void initalizeWinnerPanelTextEffect(){
+        Blend blend = new Blend();
+        blend.setMode(BlendMode.MULTIPLY);
+
+        DropShadow ds1 = new DropShadow();
+        ds1.setColor(Color.web("#00c300"));
+        ds1.setRadius(20);
+        ds1.setSpread(0.2);
+
+        Blend blend2 = new Blend();
+        blend2.setMode(BlendMode.MULTIPLY);
+
+        InnerShadow is = new InnerShadow();
+        is.setColor(Color.web("#feeb42"));
+        is.setRadius(9);
+        is.setChoke(0.8);
+        blend2.setBottomInput(is);
+
+        InnerShadow is1 = new InnerShadow();
+        is1.setColor(Color.web("#f13a00"));
+        is1.setRadius(5);
+        is1.setChoke(0.4);
+        blend2.setTopInput(is1);
+
+        Blend blend1 = new Blend();
+        blend1.setMode(BlendMode.MULTIPLY);
+        blend1.setBottomInput(ds1);
+        blend1.setTopInput(blend2);
+
+        blend.setTopInput(blend1);
+
+        ChangeListener<? super java.lang.Number> updateFont = (observable, oldValue, newValue) -> {
+            double w = parent3D.getWidth();
+            double h = parent3D.getHeight();
+            double fontSize = Math.min(w,h)*1.25;
+            winnerText.setStyle("-fx-font-size: " + +fontSize + "%");
+            winnerPlayer.setStyle("-fx-font-size: " + fontSize + "%");
+        };
+        parent3D.widthProperty().addListener(updateFont);
+        parent3D.heightProperty().addListener(updateFont);
+        updateFont.changed(null,null,null);
+
+        winnerText.setEffect(blend);
+        winnerPlayer.setEffect(blend);
+    }
+
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        Platform.runLater(()->Debug.addDebugger(new BetterOutputStream(s->Platform.runLater(()->logArea.appendText(s))), Settings.DEBUGLEVEL));
+        Platform.runLater(()->{
+            Debug.addDebugger(new BetterOutputStream(s->Platform.runLater(()->logArea.appendText(s))), Settings.DEBUGLEVEL);
+            initalizeWinnerPanelTextEffect();
+        });
     }
 }
 

@@ -24,7 +24,11 @@
 }
 
 .playerStat.active {
-    /*-fx-background-color: #fff;/**/
     -fx-background-color: #fff;
     -fx-effect: innershadow(three-pass-box, rgba(50,50,50,0.666), 5, 0.4, 0, 0 );
+}
+
+.playerStat.winner {
+    -fx-background-color: #fff;
+    -fx-effect: innershadow(three-pass-box, rgba(32,192,64,1), 20, 0.35, 0, 0 );
 }

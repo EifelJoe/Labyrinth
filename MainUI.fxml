@@ -12,6 +12,7 @@
 <?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -23,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" prefHeight="544.0" prefWidth="872.0" stylesheets="@MainUI.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_MainUI">
+<StackPane fx:id="rootPane" prefHeight="544.0" prefWidth="872.0" stylesheets="@MainUI.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhaachen.mazenet.server.userInterface.mazeFX.C_MainUI">
 	<children>
 		<HBox prefHeight="100.0" prefWidth="200.0">
 			<children>
@@ -51,7 +52,7 @@
 												<Label graphicTextGap="0.0" styleClass="dummy" />
 											</children>
 										</TilePane>
-										<Slider fx:id="camZoomSlide" majorTickUnit="5.0" max="-5.0" min="-30.0" minorTickCount="0" orientation="VERTICAL" value="-15.0" VBox.vgrow="ALWAYS" />
+										<Slider fx:id="camZoomSlide" majorTickUnit="5.0" max="-5.0" min="-30.0" minorTickCount="0" orientation="VERTICAL" value="-17.0" VBox.vgrow="ALWAYS" />
 									</children>
 									<effect>
 										<DropShadow blurType="GAUSSIAN" color="#969696b2" height="30.0" radius="14.5" width="30.0" />
@@ -59,6 +60,19 @@
 								</VBox>
 							</children>
 						</Pane>
+                  <BorderPane fx:id="winnerPanel" prefHeight="200.0" prefWidth="200.0" styleClass="winnerPanel" visible="false">
+                     <center>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="winnerText" alignment="CENTER" styleClass="winnerText" text="%MazeFX.winnerText" />
+                              <Label fx:id="winnerPlayer" alignment="CENTER" styleClass="winnerPlayer" text="MazeFX wird ihnen präsentiert von BioBrause!" textAlignment="CENTER" wrapText="true" VBox.vgrow="SOMETIMES" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </center>
+                  </BorderPane>
 					</children>
 				</StackPane>
 				<VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" HBox.hgrow="NEVER">

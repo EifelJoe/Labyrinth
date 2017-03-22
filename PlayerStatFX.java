@@ -20,6 +20,7 @@ public class PlayerStatFX {
 	private int treasureFound;
 	private int cachedTreasuresRemaining;
 	private PositionType position;
+	private Player player;
 
 	public PlayerStatFX(int playerId, Board board) throws IOException {
 		this.playerId = playerId;
@@ -45,7 +46,15 @@ public class PlayerStatFX {
 		controller.setNumRemaining(p.treasuresToGo());
 		controller.setTreasureImage(p.getCurrentTreasure().value());
 		position = board.findPlayer(playerId);
+		this.player = p;
 	}
+
+	public void setWinner(){
+		controller.setNumFound(++treasureFound);
+		controller.setNumRemaining(0);
+		controller.setWinner();
+	}
+
 	public void active(boolean act){
 		controller.setActive(act);
 	}
@@ -53,5 +62,7 @@ public class PlayerStatFX {
 	public PositionType getPosition(){
 		return position;
 	}
+
+	public Player getPlayer(){ return player; }
 
 }

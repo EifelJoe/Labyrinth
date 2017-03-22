@@ -81,6 +81,12 @@ public class C_PlayerStat implements Initializable {
 		}
 	}
 
+	public void setWinner(){
+		root.getStyleClass().remove("active");
+		activePlayer.setText("");
+		root.getStyleClass().add("winner");
+	}
+
 	private void createProgressBindings(){
 		numFound.setText(treasuresFound.getValue().toString());
 		numTotal.setText(treasuresRemaining.getValue().toString());

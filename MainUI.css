@@ -47,6 +47,17 @@
     -fx-scale-z: 1;/**/
 }
 
+.winnerPanel {
+    -fx-background-color: rgba(0,0,0,0.75);
+}
+
+.winnerText, .winnerPlayer
+{
+    -fx-text-fill: #00ff00;
+    -fx-font-weight: bold;
+    -fx-font-family: monospace;
+    -fx-padding: 0.5em;
+}
 
 .titled-pane
 {
