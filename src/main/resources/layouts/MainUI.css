@@ -47,6 +47,17 @@
     -fx-scale-z: 1;/**/
 }
 
+.winnerPanel {
+    -fx-background-color: rgba(0,0,0,0.75);
+}
+
+.winnerText, .winnerPlayer
+{
+    -fx-text-fill: #00ff00;
+    -fx-font-weight: bold;
+    -fx-font-family: monospace;
+    -fx-padding: 0.5em;
+}
 
 .titled-pane
 {
@@ -62,4 +73,27 @@
 /**/
 .currentGamePane, .logPane {
     -fx-padding: 0;
+}
+
+.logPane .logNewWindow {
+    visibility: hidden; /* feature not implemented yet! */
+    -fx-background-color: transparent;
+    -fx-font-size: 14pt;
+    -fx-opacity: 0;
+    -fx-text-fill: #3366ff;
+    -fx-padding: 5 10 0 0;
+}
+
+.logPane:hover .logNewWindow {
+    -fx-opacity: 0.4;
+}
+
+.logPane .logNewWindow:hover, .logPane .logNewWindow:focused {
+    -fx-opacity: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(51,102,255,0.666), 15, 0.4, 0, 0 );
+}
+
+.logPane .logNewWindow:pressed {
+    -fx-text-fill: #1133dd;
+    -fx-effect: dropshadow(three-pass-box, rgba(17, 51, 221,0.8), 15, 0.5, 0, 0 );
 }
