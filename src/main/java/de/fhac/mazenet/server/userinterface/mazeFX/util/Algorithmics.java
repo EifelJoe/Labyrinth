@@ -1,6 +1,6 @@
 package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
-import de.fhac.mazenet.generated.PositionType;
+import de.fhac.mazenet.server.generated.PositionType;
 import de.fhac.mazenet.server.Board;
 import de.fhac.mazenet.server.Position;
 

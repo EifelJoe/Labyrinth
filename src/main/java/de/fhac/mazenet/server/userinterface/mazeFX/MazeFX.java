@@ -99,8 +99,8 @@ public class MazeFX extends Application implements UI {
 			System.exit(0);
 		});
 		FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setLocation(getClass().getResource("MainUI.fxml")); //$NON-NLS-1$
-		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhac.mazenet.server.userinterface.messages")); //$NON-NLS-1$
+		fxmlLoader.setLocation(getClass().getResource("/layouts/MainUI.fxml")); //$NON-NLS-1$
+		fxmlLoader.setResources(ResourceBundle.getBundle("locale")); //$NON-NLS-1$
 		root = fxmlLoader.load();
 		controller = fxmlLoader.getController();
 

@@ -1,9 +1,9 @@
 package de.fhac.mazenet.server.userinterface.mazeFX;
 
-import de.fhac.mazenet.config.Settings;
+import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.BetterOutputStream;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
-import de.fhac.mazenet.tools.Debug;
+import de.fhac.mazenet.server.tools.Debug;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

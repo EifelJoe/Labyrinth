@@ -35,7 +35,7 @@
             <Rectangle2D />
          </viewport>
          <image>
-            <Image url="@../resources/sym12.png" />
+            <Image url="@../images/sym12.png" />
          </image>
          <GridPane.margin>
             <Insets />
