@@ -1,6 +1,6 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.data;
+package de.fhac.mazenet.server.userinterface.mazeFX.data;
 
-import de.fhaachen.mazenet.generated.PositionType;
+import de.fhac.mazenet.generated.PositionType;
 import javafx.scene.Node;
 
 /**

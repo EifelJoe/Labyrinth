@@ -1,6 +1,6 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX;
+package de.fhac.mazenet.server.userinterface.mazeFX;
 
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;

@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.data;
+package de.fhac.mazenet.server.userinterface.mazeFX.data;
 
 /**
  * Created by Richard Zameitat on 02.08.2016.

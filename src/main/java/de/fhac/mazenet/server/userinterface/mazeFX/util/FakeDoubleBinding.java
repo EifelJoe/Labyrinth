@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;

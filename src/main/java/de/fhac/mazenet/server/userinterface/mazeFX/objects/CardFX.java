@@ -1,11 +1,11 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.objects;
+package de.fhac.mazenet.server.userinterface.mazeFX.objects;
 
 import java.util.HashMap;
 
-import de.fhaachen.mazenet.config.Settings;
-import de.fhaachen.mazenet.generated.CardType;
-import de.fhaachen.mazenet.generated.TreasureType;
-import de.fhaachen.mazenet.server.Card;
+import de.fhac.mazenet.config.Settings;
+import de.fhac.mazenet.generated.CardType;
+import de.fhac.mazenet.generated.TreasureType;
+import de.fhac.mazenet.server.Card;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;

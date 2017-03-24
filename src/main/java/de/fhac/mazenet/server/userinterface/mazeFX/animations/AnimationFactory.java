@@ -1,9 +1,9 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.animations;
+package de.fhac.mazenet.server.userinterface.mazeFX.animations;
 
-import de.fhaachen.mazenet.server.Position;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Translate3D;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
+import de.fhac.mazenet.server.Position;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.Translate3D;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.CardFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.PlayerFX;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;

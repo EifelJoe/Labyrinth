@@ -1,9 +1,9 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
 import java.net.URL;
 import java.util.HashMap;
 
-import de.fhaachen.mazenet.config.Settings;
+import de.fhac.mazenet.config.Settings;
 import javafx.scene.image.Image;
 
 public class ImageResourcesFX {

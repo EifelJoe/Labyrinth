@@ -1,10 +1,10 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.objects;
+package de.fhac.mazenet.server.userinterface.mazeFX.objects;
 
 import java.net.URL;
 
-import de.fhaachen.mazenet.config.Settings;
-import de.fhaachen.mazenet.generated.TreasureType;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.ImageResourcesFX;
+import de.fhac.mazenet.config.Settings;
+import de.fhac.mazenet.generated.TreasureType;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;

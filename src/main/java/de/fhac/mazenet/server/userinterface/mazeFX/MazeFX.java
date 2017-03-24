@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX;/**
+package de.fhac.mazenet.server.userinterface.mazeFX;/**
 														* Created by Richard Zameitat on 25.05.2016.
 														*/
 
@@ -11,25 +11,24 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
-import de.fhaachen.mazenet.config.Settings;
-import de.fhaachen.mazenet.generated.CardType;
-import de.fhaachen.mazenet.generated.MoveMessageType;
-import de.fhaachen.mazenet.generated.PositionType;
-import de.fhaachen.mazenet.server.*;
-import de.fhaachen.mazenet.server.userInterface.Messages;
-import de.fhaachen.mazenet.server.userInterface.UI;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AnimationFactory;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.data.VectorInt2;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.CardFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.objects.PlayerFX;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.animations.AddTransition;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.Algorithmics;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.FakeTranslateBinding;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Translate3D;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.data.Wrapper;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.util.MoveStateCalculator;
-import de.fhaachen.mazenet.tools.Debug;
-import de.fhaachen.mazenet.tools.DebugLevel;
+import de.fhac.mazenet.config.Settings;
+import de.fhac.mazenet.generated.CardType;
+import de.fhac.mazenet.generated.MoveMessageType;
+import de.fhac.mazenet.generated.PositionType;
+import de.fhac.mazenet.server.userinterface.Messages;
+import de.fhac.mazenet.server.userinterface.UI;
+import de.fhac.mazenet.server.userinterface.mazeFX.animations.AnimationFactory;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.VectorInt2;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.CardFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.PlayerFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.animations.AddTransition;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.Algorithmics;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.FakeTranslateBinding;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.Translate3D;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.Wrapper;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.MoveStateCalculator;
+import de.fhac.mazenet.tools.Debug;
+import de.fhac.mazenet.tools.DebugLevel;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -115,7 +114,7 @@ public class MazeFX extends Application implements UI {
 		});
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(getClass().getResource("MainUI.fxml")); //$NON-NLS-1$
-		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhaachen.mazenet.server.userInterface.messages")); //$NON-NLS-1$
+		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhac.mazenet.server.userinterface.messages")); //$NON-NLS-1$
 		root = fxmlLoader.load();
 		controller = fxmlLoader.getController();
 

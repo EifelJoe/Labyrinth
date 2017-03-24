@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
 import java.io.ByteArrayOutputStream;
 import java.util.function.Consumer;

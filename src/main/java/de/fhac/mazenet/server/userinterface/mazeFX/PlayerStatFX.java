@@ -1,10 +1,10 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX;
+package de.fhac.mazenet.server.userinterface.mazeFX;
 
-import de.fhaachen.mazenet.generated.PositionType;
-import de.fhaachen.mazenet.server.Board;
+import de.fhac.mazenet.generated.PositionType;
+import de.fhac.mazenet.server.Board;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import de.fhaachen.mazenet.server.Player;
+import de.fhac.mazenet.server.Player;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -27,7 +27,7 @@ public class PlayerStatFX {
 
 		FXMLLoader fxmlLoader = new FXMLLoader();
 		fxmlLoader.setLocation(getClass().getResource("PlayerStat.fxml")); //$NON-NLS-1$
-		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhaachen.mazenet.server.userInterface.messages")); //$NON-NLS-1$
+		fxmlLoader.setResources(ResourceBundle.getBundle("de.fhac.mazenet.server.userinterface.messages")); //$NON-NLS-1$
 		root = fxmlLoader.load();
 		controller = fxmlLoader.getController();
 		// da die Nummer der zu suchenden Schätze 

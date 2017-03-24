@@ -1,8 +1,8 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
-import de.fhaachen.mazenet.generated.PositionType;
-import de.fhaachen.mazenet.server.Board;
-import de.fhaachen.mazenet.server.Position;
+import de.fhac.mazenet.generated.PositionType;
+import de.fhac.mazenet.server.Board;
+import de.fhac.mazenet.server.Position;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.data;
+package de.fhac.mazenet.server.userinterface.mazeFX.data;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Shape3D;

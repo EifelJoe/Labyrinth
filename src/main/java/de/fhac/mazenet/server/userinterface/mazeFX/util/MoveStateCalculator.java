@@ -1,11 +1,11 @@
-package de.fhaachen.mazenet.server.userInterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.util;
 
-import de.fhaachen.mazenet.generated.CardType;
-import de.fhaachen.mazenet.generated.MoveMessageType;
-import de.fhaachen.mazenet.generated.PositionType;
-import de.fhaachen.mazenet.server.Board;
-import de.fhaachen.mazenet.server.Position;
-import de.fhaachen.mazenet.server.userInterface.mazeFX.data.VectorInt2;
+import de.fhac.mazenet.generated.CardType;
+import de.fhac.mazenet.generated.MoveMessageType;
+import de.fhac.mazenet.generated.PositionType;
+import de.fhac.mazenet.server.Board;
+import de.fhac.mazenet.server.Position;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.VectorInt2;
 
 import java.util.ArrayList;
 import java.util.List;
