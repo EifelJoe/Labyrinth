@@ -12,13 +12,35 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by Richard Zameitat on 02.03.2017.
+ * Collection of method with the purpose of creating animation for the {@link MazeFX MazeFX user interface}.
+ *
+ * @author Richard Zameitat
  */
 public class AnimationFactory {
+	/**
+	 * Private constructor to prevent instantiation of this class
+	 */
 	private AnimationFactory(){}
 
+	/**
+	 * Amount of height to which shifted-out players get lifted up when moving them back to the board.
+	 *
+	 * @see #moveShiftedOutPlayers(List, Translate3D, CardFX, Duration)
+	 */
 	public static double PLAYER_MOVE_HEIGHT_DELTA = 1.5;
 
+	/**
+	 * Constructs the animation for moving shifted-out players from the shifter out card to their new position.
+	 *
+	 * For this, all given players get lifted up by {@link #PLAYER_MOVE_HEIGHT_DELTA}, moved to the target position,
+	 * lowered down to their original height and filly get bound to the new card.
+	 *
+	 * @param players	Players to move
+	 * @param moveTo	Target position
+	 * @param bindTo	Target card, to which the pins should be bound after the animation
+	 * @param duration	Duration of the whole animation
+	 * @return	Complete animation for moving the players (EmptyTransition if no players are given)
+	 */
 	public static Animation moveShiftedOutPlayers(List<PlayerFX> players, Translate3D moveTo, CardFX bindTo, Duration duration){
 		if(players.isEmpty()){
 			return new EmptyTransition();
@@ -39,8 +61,9 @@ public class AnimationFactory {
 		}).collect(Collectors.toList()));
 		moveXZ.getChildren().addAll(players.stream().map(p->{
 			TranslateTransition tmpT = new TranslateTransition(durXZ, p);
-			tmpT.setToX(moveTo.x);
-			tmpT.setToZ(moveTo.z);
+			Translate3D moveToTmp = moveTo.translate(p.getOffset());
+			tmpT.setToX(moveToTmp.x);
+			tmpT.setToZ(moveToTmp.z);
 			return tmpT;
 		}).collect(Collectors.toList()));
 		moveDown.getChildren().addAll(players.stream().map(p->{
@@ -68,7 +91,7 @@ public class AnimationFactory {
 	 * @param to		Destination position
 	 * @param player	Payer which shall be moved (used for graphical aspects, e.g. offsets)
 	 * @param moveDelay	Duration of each animation step
-	 * @return			Timeline animation for the whole move
+	 * @return	Timeline animation for the whole move
 	 */
 	public static Timeline createMoveTimeline(Board b, Position from, Position to, PlayerFX player, Duration moveDelay){
 		List<Position> positions;
