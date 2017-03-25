@@ -1,16 +1,14 @@
 package de.fhac.mazenet.server.userinterface.mazeFX.animations;
 
-import de.fhac.mazenet.server.Position;
-import de.fhac.mazenet.server.userinterface.mazeFX.data.Translate3D;
-import de.fhac.mazenet.server.userinterface.mazeFX.objects.CardFX;
-import de.fhac.mazenet.server.userinterface.mazeFX.objects.PlayerFX;
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import de.fhac.mazenet.server.*;
+import de.fhac.mazenet.server.userinterface.mazeFX.MazeFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.data.*;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.*;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.Algorithmics;
+import javafx.animation.*;
 import javafx.util.Duration;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,13 +17,8 @@ import java.util.stream.Collectors;
 public class AnimationFactory {
 	private AnimationFactory(){}
 
-	public static Duration DEFAULT_DURATION_MOVE_PLAYERS_TO_CARD = Duration.millis(300);
-
 	public static double PLAYER_MOVE_HEIGHT_DELTA = 1.5;
 
-	public static Animation moveShiftedOutPlayers(List<PlayerFX> players, Translate3D moveTo, CardFX bindTo) {
-		return moveShiftedOutPlayers(players, moveTo, bindTo, DEFAULT_DURATION_MOVE_PLAYERS_TO_CARD);
-	}
 	public static Animation moveShiftedOutPlayers(List<PlayerFX> players, Translate3D moveTo, CardFX bindTo, Duration duration){
 		if(players.isEmpty()){
 			return new EmptyTransition();
@@ -63,5 +56,43 @@ public class AnimationFactory {
 		});
 
 		return new SequentialTransition(moveUp,moveXZ,moveDown,updateBinding);
+	}
+
+	/**
+	 * Constructs the player movement animation
+	 *
+	 * Tries to find an actual possible path. If that fails, a straight line is used.
+	 *
+	 * @param b			Board instance to use (for path calculations)
+	 * @param from		Start position
+	 * @param to		Destination position
+	 * @param player	Payer which shall be moved (used for graphical aspects, e.g. offsets)
+	 * @param moveDelay	Duration of each animation step
+	 * @return			Timeline animation for the whole move
+	 */
+	public static Timeline createMoveTimeline(Board b, Position from, Position to, PlayerFX player, Duration moveDelay){
+		List<Position> positions;
+		try {
+			positions = Algorithmics.findPath(b,from,to);
+			System.out.printf("PATH: %s%n",Algorithmics.pathToString(positions));
+		}catch(Exception e){
+			e.printStackTrace();
+			positions = new LinkedList<>();
+		}
+
+		Wrapper<Integer> frameNo = new Wrapper<>(0);
+		List<KeyFrame> frames = positions.stream().sequential().map(p->{
+			Translate3D newPinOffset = player.getOffset();
+			Translate3D newPinTr = MazeFX.getCardTranslateForPosition(p.getCol(), p.getRow())
+					.translate(newPinOffset);
+
+			return new KeyFrame(moveDelay.multiply(++frameNo.val),
+					new KeyValue(player.translateXProperty(),newPinTr.x),
+					new KeyValue(player.translateYProperty(),newPinTr.y),
+					new KeyValue(player.translateZProperty(),newPinTr.z)
+			);
+		}).collect(Collectors.toList());
+		System.out.println(frames);
+		return new Timeline(frames.toArray(new KeyFrame[0]));
 	}
 }

@@ -243,7 +243,7 @@ public class MazeFX extends Application implements UI {
 		// scene3dRoot.getChildren().add(c1);
 	}
 
-	private static Translate3D getCardTranslateForPosition(int x, int z) {
+	public static Translate3D getCardTranslateForPosition(int x, int z) {
 		final double midX = BOARD_WIDTH / 2.;
 		final double midZ = BOARD_HEIGHT / 2.;
 		final double offX = 0.5;
@@ -360,24 +360,7 @@ public class MazeFX extends Application implements UI {
 		final Duration durBefore = Duration.millis(shifD / 3);
 		final Duration durShift = Duration.millis(shifD / 3);
 		final Duration durAfter = Duration.millis(shifD / 3);
-
 		final Duration durMove = Duration.millis(mvD);
-
-		MoveStateCalculator msc = new MoveStateCalculator(mm, b);
-		List<VectorInt2> shiftedCardsPos = msc.getCardsToShift();
-		VectorInt2 pushedOutCardPos = msc.getPushedOutPlayersPosition();
-		VectorInt2 pushedOutNewPos = msc.getNewPlayerPosition();
-		VectorInt2 shiftCardStart = msc.getShiftCardStart();
-		VectorInt2 shiftDelta = msc.getShiftDelta();
-
-		List<CardFX> shiftCards = shiftedCardsPos.stream().map(v->boardCards[v.y][v.x]).collect(Collectors.toList());
-		shiftCards.add(shiftCard);
-		CardFX pushedOutCard = boardCards[pushedOutCardPos.y][pushedOutCardPos.x];
-		List<PlayerFX> pushedOutPlayers = players.values().stream().filter(p->p.getBoundCard()==pushedOutCard).collect(Collectors.toList());
-		Translate3D pushedOutPlayersMoveTo = getCardTranslateForPosition(pushedOutNewPos.x,pushedOutNewPos.y);
-		Animation movePushedOutPlayers = AnimationFactory.moveShiftedOutPlayers(
-				pushedOutPlayers,pushedOutPlayersMoveTo,shiftCard,durMove.multiply(4));
-
 
 		System.out.println(players);
 		System.out.println(currentPlayer);
@@ -388,6 +371,28 @@ public class MazeFX extends Application implements UI {
 			pin.unbindFromCard();
 			pinBind.bind();
 		}
+		PlayerStatFX playerStat = playerStats.get(currentPlayer.playerId);
+		PositionType playerPosition = playerStat.getPosition();
+		PositionType newPinPos = mm.getNewPinPos();
+
+		MoveStateCalculator msc = new MoveStateCalculator(mm, b);
+		List<VectorInt2> shiftedCardsPos = msc.getCardsToShift();
+		VectorInt2 pushedOutCardPos = msc.getPushedOutPlayersPosition();
+		VectorInt2 pushedOutNewPos = msc.getNewPlayerPosition();
+		VectorInt2 shiftCardStart = msc.getShiftCardStart();
+		VectorInt2 shiftDelta = msc.getShiftDelta();
+		VectorInt2 preShiftPos = VectorInt2.copy(playerPosition);
+		VectorInt2 postShiftPos = msc.getPlayerPositionAfterShift(preShiftPos);
+
+		List<CardFX> shiftCards = shiftedCardsPos.stream().map(v->boardCards[v.y][v.x]).collect(Collectors.toList());
+		shiftCards.add(shiftCard);
+		CardFX pushedOutCard = boardCards[pushedOutCardPos.y][pushedOutCardPos.x];
+		List<PlayerFX> pushedOutPlayers = players.values().stream().filter(p->p.getBoundCard()==pushedOutCard).collect(Collectors.toList());
+		Translate3D pushedOutPlayersMoveTo = getCardTranslateForPosition(pushedOutNewPos.x,pushedOutNewPos.y);
+		Animation movePushedOutPlayers = AnimationFactory.moveShiftedOutPlayers(
+				pushedOutPlayers,pushedOutPlayersMoveTo,shiftCard,durMove.multiply(4));
+
+
 		FakeTranslateBinding pinBind_final = pinBind;
 
 		CardFX shiftCardC = shiftCard;
@@ -442,28 +447,10 @@ public class MazeFX extends Application implements UI {
 		animAfter.setToY(SHIFT_CARD_TRANSLATE.y);
 		animAfter.setToZ(SHIFT_CARD_TRANSLATE.z);
 
-		// todo: place player on board again if shifted "out"
-		// ... should be possible after/while calling updateAndGetShiftedCards(...)
+		Position from = new Position(postShiftPos.y, postShiftPos.x);
+		Position to = new Position(newPinPos);
+		Timeline moveAnim = AnimationFactory.createMoveTimeline(b, from, to, currentPlayer, durMove);
 
-
-		PositionType newPinPos = mm.getNewPinPos();
-
-		// TODO: update player stats to refelct positions after shifting
-		// ... or ... use onFinish, calc position from translate and THEN create further animations ...
-		Timeline moveAnim = createMoveTimeline(mm,b,durMove,msc);
-
-		/*
-		 * ExecuteTransition rebindTr = new ExecuteTransition(()->{
-		 * pin.bindToCard(boardCards[newPinPos.getRow()][newPinPos.getCol()]);
-		 * System.out.println("bind"); });
-		 * 
-		 * 
-		 * 
-		 * ExecuteTransition debugTr = new ExecuteTransition(()->{
-		 * System.out.println("\n\nSTARTING TRANSITION!"); });
-		 * 
-		 * PauseTransition debugTr2 = new PauseTransition(durMove);/
-		 **/
 		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, /*animAfter,*/ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
@@ -502,40 +489,6 @@ public class MazeFX extends Application implements UI {
 				e.printStackTrace();
 			}
 		}while(lock.getCount()!=0);
-	}
-
-	private Timeline createMoveTimeline(MoveMessageType mm, Board b, Duration moveDelay, MoveStateCalculator msc){
-		PlayerFX pin = currentPlayer;
-
-		PositionType playerPosition = playerStats.get(pin.playerId).getPosition();
-		VectorInt2 preShiftPos = VectorInt2.copy(playerPosition);
-		VectorInt2 postShiftPos = msc.getPlayerPositionAfterShift(preShiftPos);
-		List<Position> positions;
-		try {
-			// TODO: maybe improve MoveMessage to save "old" pin position
-			Position from = new Position(postShiftPos.y, postShiftPos.x);
-			Position to = new Position(mm.getNewPinPos());
-			positions = Algorithmics.findPath(b,from,to);
-			System.out.printf("PATH: %s%n",Algorithmics.pathToString(positions));
-		}catch(Exception e){
-			e.printStackTrace();
-			positions = new LinkedList<>();
-		}
-
-		Wrapper<Integer> frameNo = new Wrapper<>(0);
-		List<KeyFrame> frames = positions.stream().sequential().map(p->{
-			Translate3D newPinOffset = pin.getOffset();
-			Translate3D newPinTr = getCardTranslateForPosition(p.getCol(), p.getRow())
-					.translate(newPinOffset);
-
-			return new KeyFrame(moveDelay.multiply(++frameNo.val),
-					new KeyValue(pin.translateXProperty(),newPinTr.x),
-					new KeyValue(pin.translateYProperty(),newPinTr.y),
-					new KeyValue(pin.translateZProperty(),newPinTr.z)
-				);
-		}).collect(Collectors.toList());
-		System.out.println(frames);
-		return new Timeline(frames.toArray(new KeyFrame[0]));
 	}
 
 	@Override
