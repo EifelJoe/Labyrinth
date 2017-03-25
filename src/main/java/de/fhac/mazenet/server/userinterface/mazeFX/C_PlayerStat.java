@@ -1,6 +1,7 @@
 package de.fhac.mazenet.server.userinterface.mazeFX;
 
-import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.objects.PlayerFX;
+import de.fhac.mazenet.server.userinterface.mazeFX.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,6 +53,8 @@ public class C_PlayerStat implements Initializable {
 
     public void setTeamId(int playerId){
         this.teamId.textProperty().setValue(Integer.toString(playerId));
+        Color c = PlayerFX.playerIdToColor(playerId);
+        this.teamId.setStyle("-fx-border-color: " + Converter.colorToRgbHex(c));
     }
 
     public void setPlayerName(String playerName){
