@@ -1,0 +1,8 @@
+[submodule "mvn-repo/release"]
+	path = mvn-repo/release
+	url = https://git.noc.fh-aachen.de/mazenet/maven-repo.git
+	branch = release
+[submodule "mvn-repo/snapshot"]
+	path = mvn-repo/snapshot
+	url = https://git.noc.fh-aachen.de/mazenet/maven-repo.git
+	branch = snapshot
