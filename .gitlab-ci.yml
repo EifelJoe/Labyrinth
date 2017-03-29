@@ -14,6 +14,7 @@
 #   with multiple JDKs.
 # * Uses site:stage to collect the documentation for multi-module projects.
 # * Publishes the documentation for `master` branch.
+image: hbongen/openjfx-maven
 
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
@@ -51,12 +52,10 @@ cache:
 # Validate merge requests using JDK8
 validate:jdk8:
   <<: *validate
-  image: hbongen/openjfx-maven
 
 # Verify merge requests using JDK8
 verify:jdk8:
   <<: *verify
-  image: hbongen/openjfx-maven
 
 # For `master` branch run `mvn deploy` automatically.
 # Here you need to decide whether you want to use JDK7 or 8.
@@ -65,27 +64,25 @@ verify:jdk8:
 # See https://maven.apache.org/settings.html
 deploy-release:jdk8:
   stage: deploy
+  artifacts:
+        paths:
+        - target/*.jar
   script:
-    - 'mvn $MAVEN_CLI_OPTS deploy'
-    - 'cd mvn-repo/release'
-    - 'git add .'
-    - 'git commit -m "New Release (done by CI)"'
-    - 'git push origin release'
+    - 'mvn $MAVEN_CLI_OPTS install'
   only:
     - master
-  image: hbongen/openjfx-maven
+    - tags
+    - triggers
 
 deploy-snapshot:jdk8:
     stage: deploy
     script:
-      - 'mvn $MAVEN_CLI_OPTS deploy'
-      - 'cd mvn-repo/snapshot'
-      - 'git add .'
-      - 'git commit -m "New Snapshot (done by CI)"'
-      - 'git push origin snapshot'
+      - 'mvn $MAVEN_CLI_OPTS install'
+    artifacts:
+      paths:
+      - target/*.jar
     only:
       - develop
-    image: hbongen/openjfx-maven
 
 
 #pages:
