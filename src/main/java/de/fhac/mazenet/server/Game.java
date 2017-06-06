@@ -95,14 +95,19 @@ public class Game extends Thread {
 
             //encrtypted
 
-            //System.setProperty("javax.net.ssl.keyStore", "lfkeystore2");
-            //System.setProperty("javax.net.ssl.keyStorePassword", "wshr.ut");
+            // Setup SSL
+            // FIXME find out why Settings.SSL_CERT_STORE and Settings.SSL_CERT_STORE_PASSWD is not working
+            System.out.println("Setting: "+Settings.SSL_CERT_STORE+ " Passwd: "+Settings.SSL_CERT_STORE_PASSWD);
+            System.setProperty("javax.net.ssl.keyStore", "/home/harald/Dev/FH/maze-server/maze-ssl.jks");
+            System.setProperty("javax.net.ssl.keyStorePassword", "NukabWiod");
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             sslServerSocket = ssf.createServerSocket(Settings.SSL_PORT);
 
 
         } catch (IOException e) {
-            System.err.println(Messages.getString("Game.portUsed")); //$NON-NLS-1$
+            //FIXME differentiate between SSL Error und Port used error
+            System.err.println(e.getLocalizedMessage());
+            Debug.print(Messages.getString("Game.portUsed"),DebugLevel.DEFAULT); //$NON-NLS-1$
         }
         boolean accepting = true;
         timeOutManager.startLoginTimeOut(this);

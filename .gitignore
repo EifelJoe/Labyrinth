@@ -3,6 +3,9 @@
 # Compiled class file
 *.class
 
+# SSL Cert-Store
+maze-ssl.jks
+
 # Package Files #
 *.jar
 *.war
@@ -29,3 +32,4 @@ buildNumber.properties
 ## IDEA
 .idea/
 maze-server.iml
+
