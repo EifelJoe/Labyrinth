@@ -71,13 +71,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>maven</executable>
+                    <executable>java</executable>
                     <!-- optional -->
                     <mainClass>de.fhac.mazenet.server.Game</mainClass>
-                    <workingDirectory>/tmp</workingDirectory>
-                    <arguments>
-                        <argument>-X</argument>
-                    </arguments>
                 </configuration>
             </plugin>
             <plugin>
