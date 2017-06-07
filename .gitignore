@@ -3,6 +3,9 @@
 # Compiled class file
 *.class
 
+# SSL Cert-Store
+maze-ssl.jks
+
 # Package Files #
 *.jar
 *.war
@@ -12,7 +15,6 @@
 *.rar
 
 ## MAVEN
-
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -29,5 +31,10 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 
 ## IDEA
-/.idea/
-*.iml
+.idea/
+maze-server.iml
+
+## Eclipse
+.classpath
+.project
+.settings/

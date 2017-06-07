@@ -11,7 +11,13 @@ import java.util.Locale;
 import java.util.Properties;
 
 public class Settings {
-	/**
+	public static int PORT = 5123;
+    public static int SSL_PORT = 5124;
+
+    public static String SSL_CERT_STORE="maze-ssl.jks";
+    public static String SSL_CERT_STORE_PASSWD="NukabWiod";
+
+    /**
 	 * Die maximal erlaubte Laenge des Loginnamens
 	 */
 	public static int MAX_NAME_LENGTH = 30;
@@ -47,7 +53,6 @@ public class Settings {
 	 * Die maximale Anzahl der Versuche einen gueltigen Zug zu uebermitteln
 	 */
 	public static int MOVETRIES = 3;
-	public static int PORT = 5123;
 	public static long SENDTIMEOUT = 1 * 30 * 1000;
 	/**
 	 * Die Zeit in Milisekunden, die das Einschieben der Shiftcard dauern soll
@@ -87,7 +92,10 @@ public class Settings {
 		LOGINTRIES = Integer.parseInt(prop.get("LOGINTRIES").toString()); 
 		MOVEDELAY = Integer.parseInt(prop.get("MOVEDELAY").toString()); 
 		MOVETRIES = Integer.parseInt(prop.get("MOVETRIES").toString()); 
-		PORT = Integer.parseInt(prop.get("PORT").toString()); 
+		PORT = Integer.parseInt(prop.get("PORT").toString());
+		SSL_PORT = Integer.parseInt(prop.get("SSL_PORT").toString());
+		SSL_CERT_STORE = prop.getProperty("SSL_CERT_STORE");
+		SSL_CERT_STORE_PASSWD =prop.getProperty("SSL_CERT_STORE_PASSWD");
 		SENDTIMEOUT = Integer.parseInt(prop.get("SENDTIMEOUT").toString());//.split(" * ")[0])*Integer.parseInt(prop.get("SENDTIMEOUT").toString().split(" * ")[1])*Integer.parseInt(prop.get("SENDTIMEOUT").toString().split(" * ")[2]); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 		SHIFTDELAY = Integer.parseInt(prop.get("SHIFTDELAY").toString()); 
 		TESTBOARD = Boolean.parseBoolean(prop.get("TESTBOARD").toString()); //$NON-NLS-1$
