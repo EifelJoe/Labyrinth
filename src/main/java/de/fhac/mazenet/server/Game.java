@@ -1,5 +1,24 @@
 package de.fhac.mazenet.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.Stack;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.net.ssl.SSLServerSocketFactory;
+
 import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.generated.ErrorType;
 import de.fhac.mazenet.server.generated.MoveMessageType;
@@ -9,19 +28,6 @@ import de.fhac.mazenet.server.timeouts.TimeOutManager;
 import de.fhac.mazenet.server.tools.Debug;
 import de.fhac.mazenet.server.tools.DebugLevel;
 import de.fhac.mazenet.server.userinterface.UI;
-
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.*;
-import java.util.concurrent.*;
 
 public class Game extends Thread {
 
@@ -63,43 +69,15 @@ public class Game extends Thread {
         // Constructor
         try {
 
-			/*
-             * TODO Prepare for SSL
-			 *
-			 * // Server needs some key material. We'll use an OpenSSL/PKCS8
-			 * style key (possibly encrypted). String certificateChain =
-			 * "/path/to/this/server.crt"; String privateKey =
-			 * "/path/to/this/server.key"; char[] password =
-			 * "changeit".toCharArray(); KeyMaterial km = new KeyMaterial(
-			 * certificateChain, privateKey, password );
-			 * 
-			 * server.setKeyMaterial( km );
-			 * 
-			 * // These settings have to do with how we'll treat client
-			 * certificates that are presented // to us. If the client doesn't
-			 * present any client certificate, then these are ignored.
-			 * server.setCheckHostname( false ); // default setting is "false"
-			 * for SSLServer server.setCheckExpiry( true ); // default setting
-			 * is "true" for SSLServer server.setCheckCRL( true ); // default
-			 * setting is "true" for SSLServer
-			 * 
-			 * // This server trusts all client certificates presented (usually
-			 * people won't present // client certs, but if they do, we'll give
-			 * them a socket at the very least). server.addTrustMaterial(
-			 * TrustMaterial.TRUST_ALL ); SSLServerSocket sslServerSocket = (SSLServerSocket)
-			 * server.createServerSocket( 7443 );
-			 * 
-			 */
             //unencrypted
             serverSocket = new ServerSocket(Settings.PORT);
 
             //encrtypted
 
             // Setup SSL
-            // FIXME find out why Settings.SSL_CERT_STORE and Settings.SSL_CERT_STORE_PASSWD is not working
-            System.out.println("Setting: "+Settings.SSL_CERT_STORE+ " Passwd: "+Settings.SSL_CERT_STORE_PASSWD);
-            System.setProperty("javax.net.ssl.keyStore", "/home/harald/Dev/FH/maze-server/maze-ssl.jks");
-            System.setProperty("javax.net.ssl.keyStorePassword", "NukabWiod");
+            System.setProperty("javax.net.ssl.keyStorePassword", Settings.SSL_CERT_STORE_PASSWD);
+            System.setProperty("javax.net.ssl.keyStore", Settings.SSL_CERT_STORE);
+            
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             sslServerSocket = ssf.createServerSocket(Settings.SSL_PORT);
 
@@ -109,7 +87,6 @@ public class Game extends Thread {
             System.err.println(e.getLocalizedMessage());
             Debug.print(Messages.getString("Game.portUsed"),DebugLevel.DEFAULT); //$NON-NLS-1$
         }
-        boolean accepting = true;
         timeOutManager.startLoginTimeOut(this);
         Stack<Integer> availableIds = new Stack<>();
         List<String> connectedIPs = new ArrayList<>();
