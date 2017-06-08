@@ -437,17 +437,11 @@ public class Board extends BoardType {
         PathInfo[][] erreichbar = getAllReachablePositionsMatrix(position);
         for (int i = 0; i < erreichbar.length; i++) {
             for (int j = 0; j < erreichbar[0].length; j++) {
-                System.out.printf("%2d ",erreichbar[i][j].getStepsFromSource());
                 if (erreichbar[i][j].getStepsFromSource() > -1) {
                     erreichbarePositionen.add(new Position(i, j));
                 }
             }
-            System.out.println();
         }
-        for (Position p : erreichbarePositionen) {
-            System.out.print("P: " + p);
-        }
-        System.out.println();
         return erreichbarePositionen;
     }
 
