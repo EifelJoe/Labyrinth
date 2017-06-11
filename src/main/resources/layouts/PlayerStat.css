@@ -4,6 +4,14 @@
 .playerStat, .playerStat * {
     -fx-fill: #ddd;
 }/**/
+
+.playerStat {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #ccc;
+    -fx-border-style: solid;
+    -fx-background-color: #fafafa;
+}
+
 .playerStat *:not(.progress) {
     -fx-background-color: transparent;
 }
@@ -24,12 +32,12 @@
 }
 
 .playerStat.active {
-    -fx-background-color: #fff;
+    /*-fx-background-color: #fff;*/
     -fx-effect: innershadow(three-pass-box, rgba(50,50,50,0.666), 5, 0.4, 0, 0 );
 }
 
 .playerStat.winner {
-    -fx-background-color: #fff;
+    /*-fx-background-color: #fff;*/
     -fx-effect: innershadow(three-pass-box, rgba(32,192,64,1), 20, 0.35, 0, 0 );
 }
 
