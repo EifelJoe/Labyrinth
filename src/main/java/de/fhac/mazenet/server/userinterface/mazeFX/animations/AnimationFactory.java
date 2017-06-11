@@ -74,6 +74,12 @@ public class AnimationFactory {
 
 		ExecuteTransition updateBinding = new ExecuteTransition(()->{
 			players.forEach(p->{
+				if(p.getBoundCard()==null){
+					// This is the active player which might make a move after this transition
+					// and binding the player now can cause bugs, because the pin binding is
+					// already managed before shifting and after moving.
+					return;
+				}
 				p.bindToCard(bindTo);
 			});
 		});

@@ -365,12 +365,7 @@ public class MazeFX extends Application implements UI {
 		System.out.println(players);
 		System.out.println(currentPlayer);
 		final PlayerFX pin = currentPlayer != null ? currentPlayer : players.getOrDefault(1, null);
-		FakeTranslateBinding pinBind = null;
-		if (pin.getBoundCard() != null) {
-			pinBind = new FakeTranslateBinding(pin, pin.getBoundCard(), pin.getOffset());
-			pin.unbindFromCard();
-			pinBind.bind();
-		}
+
 		PlayerStatFX playerStat = playerStats.get(currentPlayer.playerId);
 		PositionType playerPosition = playerStat.getPosition();
 		PositionType newPinPos = mm.getNewPinPos();
@@ -393,6 +388,12 @@ public class MazeFX extends Application implements UI {
 				pushedOutPlayers,pushedOutPlayersMoveTo,shiftCard,durMove.multiply(4));
 
 
+		FakeTranslateBinding pinBind = null;
+		if (pin.getBoundCard() != null) {
+			pinBind = new FakeTranslateBinding(pin, pin.getBoundCard(), pin.getOffset());
+			pin.unbindFromCard();
+			pinBind.bind();
+		}
 		FakeTranslateBinding pinBind_final = pinBind;
 
 		CardFX shiftCardC = shiftCard;
@@ -451,7 +452,10 @@ public class MazeFX extends Application implements UI {
 		Position to = new Position(newPinPos);
 		Timeline moveAnim = AnimationFactory.createMoveTimeline(b, from, to, currentPlayer, durMove);
 
-		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, /*animAfter,*/ moveAnim);
+		// a little bit of time to switch focus from shifting to moving ^^
+		Transition pause = new PauseTransition(Duration.millis(100));
+
+		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, pause, /*animAfter,*/ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
 			//System.out.println("yoyo .. done!");
