@@ -142,7 +142,6 @@ public class MazeFX extends Application implements UI {
 
 	private void startActionPerformed() {
 		controller.gameStarted();
-		Debug.print("MazeFX.startactionPerformed", DebugLevel.DEFAULT); //$NON-NLS-1$
 		Settings.DEFAULT_PLAYERS = controller.getMaxPlayer();
 		if (game == null) {
 			setGame(new Game());
@@ -156,7 +155,6 @@ public class MazeFX extends Application implements UI {
 	}
 
 	private void stopActionPerformed() {
-		Debug.print("MazeFX.stopactionPerformed", DebugLevel.DEFAULT); //$NON-NLS-1$
 		if (game != null) {
 			game.stopGame();
 			game = null;
@@ -327,7 +325,6 @@ public class MazeFX extends Application implements UI {
 	}
 
 	private void initFromBoard(Board b) {
-		System.out.println(b);
 		clearBoard();
 		this.board = b;
 		players = new HashMap<>();
@@ -362,8 +359,6 @@ public class MazeFX extends Application implements UI {
 		final Duration durAfter = Duration.millis(shifD / 3);
 		final Duration durMove = Duration.millis(mvD);
 
-		System.out.println(players);
-		System.out.println(currentPlayer);
 		final PlayerFX pin = currentPlayer != null ? currentPlayer : players.getOrDefault(1, null);
 
 		PlayerStatFX playerStat = playerStats.get(currentPlayer.playerId);

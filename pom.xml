@@ -65,6 +65,7 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <phase>verify</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>

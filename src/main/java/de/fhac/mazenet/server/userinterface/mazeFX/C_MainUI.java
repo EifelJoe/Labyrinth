@@ -1,5 +1,6 @@
 package de.fhac.mazenet.server.userinterface.mazeFX;
 
+import de.fhac.mazenet.server.Messages;
 import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.BetterOutputStream;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
@@ -187,13 +188,16 @@ public class C_MainUI implements Initializable {
         serverStop.disableProperty().setValue(false);
         clearPlayerStats();
         ImageResourcesFX.reset();
+        serverStatusText.setText(Messages.getString("MazeFX.status.started"));
         playerStatsPlaceholder.setVisible(true);
+
     }
 
-    public void gameStopped(){
+    public void gameStopped() {
         serverStop.disableProperty().setValue(true);
         maxPlayer.disableProperty().setValue(false);
         serverStart.disableProperty().setValue(false);
+        serverStatusText.setText(Messages.getString("MazeFX.status.stopped"));
     }
 
     public void addPlayerStat(Node statNode){
