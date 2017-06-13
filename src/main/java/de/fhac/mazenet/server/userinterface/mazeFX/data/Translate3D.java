@@ -1,5 +1,6 @@
-package de.fhac.mazenet.server.userinterface.mazeFX.util;
+package de.fhac.mazenet.server.userinterface.mazeFX.data;
 
+import javafx.scene.Node;
 import javafx.scene.shape.Shape3D;
 
 /**
@@ -36,5 +37,13 @@ public class Translate3D {
     }
     public Translate3D invert(){
         return new Translate3D(-x,-y,-z);
+    }
+
+    public static Translate3D fromNode(Node n){
+        return new Translate3D(
+                n.translateXProperty().get(),
+                n.translateYProperty().get(),
+                n.translateZProperty().get()
+        );
     }
 }

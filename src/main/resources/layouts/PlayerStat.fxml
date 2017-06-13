@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<?import java.lang.String?>
-<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhac.mazenet.server.userinterface.mazeFX.C_PlayerStat">
+
+<GridPane fx:id="root" hgap="5.0" maxWidth="1.7976931348623157E308" prefWidth="234.0" stylesheets="@PlayerStat.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.fhac.mazenet.server.userinterface.mazeFX.C_PlayerStat">
    <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="25.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -20,7 +24,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label fx:id="teamId" alignment="CENTER_RIGHT" text="#" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
+      <Label fx:id="teamId" alignment="CENTER" contentDisplay="CENTER" styleClass="teamId" text="3" textAlignment="RIGHT" textOverrun="CLIP" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
       <Label fx:id="playerName" text="TeamUnicode" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
          <font>
             <Font name="System Bold" size="12.0" />
@@ -31,7 +35,7 @@
             <Rectangle2D />
          </viewport>
          <image>
-            <Image url="@../resources/sym12.png" />
+            <Image url="@../images/sym12.png" />
          </image>
          <GridPane.margin>
             <Insets />
@@ -39,33 +43,38 @@
       </ImageView>
       <GridPane styleClass="treasureStats" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
         <columnConstraints>
-          <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-          <ColumnConstraints hgrow="NEVER" minWidth="5.0" prefWidth="25.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+          <ColumnConstraints hgrow="NEVER" minWidth="5.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
-          <RowConstraints vgrow="NEVER" />
+          <RowConstraints percentHeight="50.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
             <Label text="%MazeFX.found" />
-            <Label fx:id="numFound" text="#" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label text="%MazeFX.remeaining" GridPane.rowIndex="1" />
-            <Label fx:id="numRemaining" text="#" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
+            <HBox GridPane.columnIndex="1">
+               <children>
+                  <Label fx:id="numFound" text="#">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label text="/" />
+                  <Label fx:id="numTotal" text="#">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <ProgressBar fx:id="treasureProgress" maxWidth="1.7976931348623157E308" styleClass="progress" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
          </children>
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
       </GridPane>
       <Label fx:id="activePlayer" text="&gt;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
    </children>
-   <effect>
-      <DropShadow />
-   </effect>
    <styleClass>
       <String fx:value="playerStat" />
       <String fx:value="active" />

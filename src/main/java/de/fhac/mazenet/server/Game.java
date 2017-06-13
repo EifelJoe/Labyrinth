@@ -1,6 +1,7 @@
 package de.fhac.mazenet.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -146,9 +147,10 @@ public class Game extends Thread {
                     }
                     barrier.await();
 
-                    String ip = mazeClient[0].getInetAddress().getHostAddress();
+                    InetAddress inetAddress = mazeClient[0].getInetAddress();
+                    String ip = inetAddress.getHostAddress();
                     if (!connectedIPs.contains(ip)) {
-                        if (!ip.equals("127.0.0.1")) { //$NON-NLS-1$
+                        if (!inetAddress.isLoopbackAddress()) {
                             connectedIPs.add(ip);
                         }
                         Connection c = new Connection(mazeClient[0], this, id);
