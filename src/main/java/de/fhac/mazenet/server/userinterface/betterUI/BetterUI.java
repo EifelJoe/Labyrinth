@@ -290,7 +290,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[0].setText(Messages.getString("BetterUI.OnePlayer")); //$NON-NLS-1$
 					MIPlayerSelection[0].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 1;
+							Settings.NUMBER_OF_PLAYERS = 1;
 						}
 					});
 				}
@@ -300,7 +300,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[1].setText(Messages.getString("BetterUI.TwoPlayer")); //$NON-NLS-1$
 					MIPlayerSelection[1].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 2;
+							Settings.NUMBER_OF_PLAYERS = 2;
 						}
 					});
 				}
@@ -310,7 +310,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[2].setText(Messages.getString("BetterUI.ThreePlayer")); //$NON-NLS-1$
 					MIPlayerSelection[2].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 3;
+							Settings.NUMBER_OF_PLAYERS = 3;
 						}
 					});
 				}
@@ -320,7 +320,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[3].setText(Messages.getString("BetterUI.FourPlayer")); //$NON-NLS-1$
 					MIPlayerSelection[3].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 4;
+							Settings.NUMBER_OF_PLAYERS = 4;
 						}
 					});
 
@@ -330,7 +330,7 @@ public class BetterUI extends JFrame implements UI {
 					spielerAnz.add(item);
 
 				}
-				MIPlayerSelection[Settings.DEFAULT_PLAYERS - 1].setSelected(true);
+				MIPlayerSelection[Settings.NUMBER_OF_PLAYERS - 1].setSelected(true);
 
 			}
 		}

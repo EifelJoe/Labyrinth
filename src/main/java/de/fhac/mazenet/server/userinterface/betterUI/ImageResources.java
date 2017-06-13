@@ -1,6 +1,6 @@
 package de.fhac.mazenet.server.userinterface.betterUI;
 
-import de.fhac.mazenet.server.config.Settings;
+import de.fhac.mazenet.server.userinterface.UISettings;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,7 +18,7 @@ public class ImageResources {
 		if (images.containsKey(name)) {
 			return images.get(name);
 		}
-		URL u = ImageResources.class.getResource(Settings.IMAGEPATH + name + Settings.IMAGEFILEEXTENSION);
+		URL u = ImageResources.class.getResource(UISettings.IMAGEPATH + name + UISettings.IMAGEFILEEXTENSION);
 		Image img = null;
 		try {
 			img = ImageIO.read(u);
@@ -35,8 +35,8 @@ public class ImageResources {
 
 	public static void treasureFound(String treasure) {
 		if (!treasure.startsWith("Start")) { //$NON-NLS-1$
-			URL u = ImageResources.class.getResource(Settings.IMAGEPATH + "found" //$NON-NLS-1$
-					+ Settings.IMAGEFILEEXTENSION);
+			URL u = ImageResources.class.getResource(UISettings.IMAGEPATH + "found" //$NON-NLS-1$
+					+ UISettings.IMAGEFILEEXTENSION);
 			try {
 				images.put(treasure, ImageIO.read(u));
 			} catch (IOException e) {

@@ -2,6 +2,7 @@ package de.fhac.mazenet.server.config;
 
 import de.fhac.mazenet.server.tools.DebugLevel;
 import de.fhac.mazenet.server.userinterface.UI;
+import de.fhac.mazenet.server.userinterface.UISettings;
 import de.fhac.mazenet.server.userinterface.betterUI.BetterUI;
 import de.fhac.mazenet.server.userinterface.mazeFX.MazeFX;
 
@@ -33,12 +34,7 @@ public class Settings {
 	 * Startwert fuer die Spieleranzahl Kann aber noch veraendert werden,
 	 * deshalb nicht final
 	 */
-	public static int DEFAULT_PLAYERS;
-	public static String IMAGEFILEEXTENSION;
-	/**
-	 * Auf das angehaengte / achten
-	 */
-	public static String IMAGEPATH;
+	public static int NUMBER_OF_PLAYERS;
 	public static Locale LOCALE;
 	/**
 	 * Die Zeit in Milisekunden, nach der ein Logintimeout eintritt LOGINTIMEOUT
@@ -86,9 +82,7 @@ public class Settings {
 			}
 		}
 		MAX_NAME_LENGTH = Integer.parseInt(prop.getProperty("MAX_NAME_LENGTH", "30"));
-		DEFAULT_PLAYERS = Integer.parseInt(prop.getProperty("DEFAULT_PLAYERS", "1"));
-		IMAGEFILEEXTENSION = prop.getProperty("IMAGEFILEEXTENSION", ".png");
-		IMAGEPATH = prop.getProperty("IMAGEPATH", "/images/");
+		NUMBER_OF_PLAYERS = Integer.parseInt(prop.getProperty("NUMBER_OF_PLAYERS", "1"));
 		LOCALE = new Locale(prop.getProperty("LOCALE", "de"));
 		LOGINTIMEOUT = Integer.parseInt(prop.getProperty("LOGINTIMEOUT", "120000"));
 		LOGINTRIES = Integer.parseInt(prop.getProperty("LOGINTRIES", "3"));
@@ -123,8 +117,7 @@ public class Settings {
 	@SuppressWarnings("nls")
 	public static void print() {
 		// TODO vervollstaendigen
-		System.out.println("Imagepath: " + Settings.IMAGEPATH);
-		System.out.println("Imageext: " + Settings.IMAGEFILEEXTENSION);
-
+		System.out.println("Imagepath: " + UISettings.IMAGEPATH);
+		System.out.println("Imageext: " + UISettings.IMAGEFILEEXTENSION);
 	}
 }

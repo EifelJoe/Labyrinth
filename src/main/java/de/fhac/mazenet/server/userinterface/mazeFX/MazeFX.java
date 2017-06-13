@@ -150,7 +150,7 @@ public class MazeFX extends Application implements UI {
 
 	private void startActionPerformed() {
 		controller.gameStarted();
-		Settings.DEFAULT_PLAYERS = controller.getMaxPlayer();
+		Settings.NUMBER_OF_PLAYERS = controller.getMaxPlayer();
 		if (game == null) {
 			setGame(new Game());
 		}

@@ -20,6 +20,12 @@ import java.util.concurrent.Future;
 
 import javax.net.ssl.SSLServerSocketFactory;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.generated.ErrorType;
 import de.fhac.mazenet.server.generated.MoveMessageType;
@@ -29,7 +35,6 @@ import de.fhac.mazenet.server.timeouts.TimeOutManager;
 import de.fhac.mazenet.server.tools.Debug;
 import de.fhac.mazenet.server.tools.DebugLevel;
 import de.fhac.mazenet.server.userinterface.UI;
-import org.apache.commons.cli.*;
 
 public class Game extends Thread {
 
@@ -353,7 +358,7 @@ public class Game extends Thread {
 			System.out.println("Usage: -c <pfad zu config file>");
 		}
 
-		playerCount = Settings.DEFAULT_PLAYERS;
+		playerCount = Settings.NUMBER_OF_PLAYERS;
 	}
 
 	public void run() {
