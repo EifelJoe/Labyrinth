@@ -20,6 +20,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -112,8 +113,8 @@ public class MazeFX extends Application implements UI {
 		primaryStage.setTitle(Messages.getString("MazeFX.WindowTitle")); //$NON-NLS-1$
 		Scene scene = new Scene(root, 1000, 600);
 		primaryStage.setScene(scene);
+		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/maze.png")));
 		primaryStage.show();
-
 		instanceReady();
 	}
 
@@ -453,7 +454,6 @@ public class MazeFX extends Application implements UI {
 		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, pause, /*animAfter,*/ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
-			//System.out.println("yoyo .. done!");
 			if (pinBind_final != null) {
 				pinBind_final.unbind();
 			}
@@ -503,21 +503,24 @@ public class MazeFX extends Application implements UI {
 	@Override
 	public void setGame(Game g) {
 		this.game = g;
-		if (g == null) {
+		//not needed ??? Needs further testing
+/*		if (g == null) {
 			// Platform.runLater(()->clearBoard());
 		} else {
 			// g.start();
-		}
+		}*/
 	}
 
 	@Override
 	public void gameEnded(Player winner) {
 		Platform.runLater(() -> {
 			controller.gameStopped();
-			int playerId = winner.getID();
-			PlayerStatFX stats = playerStats.get(playerId);
-			stats.setWinner();
-			controller.showWinner(stats.getPlayer().getName());
+			if(winner!= null) {
+				int playerId = winner.getID();
+				PlayerStatFX stats = playerStats.get(playerId);
+				stats.setWinner();
+				controller.showWinner(stats.getPlayer().getName());
+			}
 		});
 
 	}

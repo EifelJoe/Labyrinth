@@ -103,7 +103,6 @@ public class AnimationFactory {
 		List<Position> positions;
 		try {
 			positions = Algorithmics.findPath(b,from,to);
-			//System.out.printf("PATH: %s%n",Algorithmics.pathToString(positions));
 		}catch(Exception e){
 			e.printStackTrace();
 			positions = new LinkedList<>();
@@ -121,7 +120,6 @@ public class AnimationFactory {
 					new KeyValue(player.translateZProperty(),newPinTr.z)
 			);
 		}).collect(Collectors.toList());
-		System.out.println(frames);
 		return new Timeline(frames.toArray(new KeyFrame[0]));
 	}
 }
