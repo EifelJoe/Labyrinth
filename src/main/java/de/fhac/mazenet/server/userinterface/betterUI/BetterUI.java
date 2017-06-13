@@ -20,6 +20,8 @@ import java.util.TreeMap;
 
 public class BetterUI extends JFrame implements UI {
 
+	private static final long serialVersionUID = 2L;
+	static BetterUI instance;
 	int currentPlayer;
 	UIBoard uiboard = new UIBoard();
 	StatsPanel statPanel = new StatsPanel();
@@ -241,7 +243,7 @@ public class BetterUI extends JFrame implements UI {
 		}
 	}
 
-	public BetterUI() {
+	private BetterUI() {
 		// Eigenname
 		super("Better MazeNet UI"); //$NON-NLS-1$
 		{
@@ -319,15 +321,14 @@ public class BetterUI extends JFrame implements UI {
 							Settings.DEFAULT_PLAYERS = 4;
 						}
 					});
-					
+
 				}
 				ButtonGroup spielerAnz = new ButtonGroup();
 				for (JRadioButtonMenuItem item : MIPlayerSelection) {
 					spielerAnz.add(item);
 
 				}
-				MIPlayerSelection[Settings.DEFAULT_PLAYERS-1].setSelected(true);
-				
+				MIPlayerSelection[Settings.DEFAULT_PLAYERS - 1].setSelected(true);
 
 			}
 		}
@@ -631,6 +632,12 @@ public class BetterUI extends JFrame implements UI {
 		}
 		MIStart.setEnabled(true);
 		MIStop.setEnabled(false);
+	}
+
+	public static BetterUI getInstance() {
+		if (instance == null)
+			instance = new BetterUI();
+		return instance;
 	}
 
 }

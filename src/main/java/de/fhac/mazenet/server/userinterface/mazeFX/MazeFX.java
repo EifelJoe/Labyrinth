@@ -1,6 +1,6 @@
 package de.fhac.mazenet.server.userinterface.mazeFX;/**
- * Created by Richard Zameitat on 25.05.2016.
- */
+													* Created by Richard Zameitat on 25.05.2016.
+													*/
 
 import de.fhac.mazenet.server.*;
 import de.fhac.mazenet.server.config.Settings;
@@ -38,16 +38,23 @@ import java.util.stream.Collectors;
 
 public class MazeFX extends Application implements UI {
 
+	private static MazeFX instance;
+
+	public static MazeFX getInstance() {
+		if (instance == null)
+			instance = newInstance();
+		return instance;
+	}
+
 	// DIRTY HACK FOR GETTING AN INSTANCE STARTS HERE
 	// (JavaFX ist not very good at creating instances ...)
 	private static CountDownLatch instanceCreated = new CountDownLatch(1);
 	private static MazeFX lastInstance = null;
 
 	public MazeFX() {
-
 	}
 
-	public synchronized static MazeFX newInstance() {
+	private synchronized static MazeFX newInstance() {
 		new Thread(() -> Application.launch(MazeFX.class)).start();
 		try {
 			instanceCreated.await();
@@ -188,7 +195,7 @@ public class MazeFX extends Application implements UI {
 
 		// create rotation animations
 		// rotate right
-		AddTransition camRotR = new AddTransition(Duration.millis(3000),camRotateY.angleProperty(),360);
+		AddTransition camRotR = new AddTransition(Duration.millis(3000), camRotateY.angleProperty(), 360);
 		camRotR.setInterpolator(Interpolator.LINEAR);
 		camRotR.setCycleCount(Animation.INDEFINITE);
 		camRotR.setAutoReverse(false);
@@ -204,7 +211,7 @@ public class MazeFX extends Application implements UI {
 		controller.addCamRotateLeftStopListener(camRotL::stop);
 
 		// rotate up
-		AddTransition camRotU = new AddTransition(Duration.millis(3000),camRotateX.angleProperty(),-360);
+		AddTransition camRotU = new AddTransition(Duration.millis(3000), camRotateX.angleProperty(), -360);
 		camRotU.setLowerLimit(-90);
 		camRotU.setInterpolator(Interpolator.LINEAR);
 		camRotU.setCycleCount(Animation.INDEFINITE);
@@ -213,7 +220,7 @@ public class MazeFX extends Application implements UI {
 		controller.addCamRotateUpStopListener(camRotU::stop);
 
 		// rotate down
-		AddTransition camRotD = new AddTransition(Duration.millis(3000), camRotateX.angleProperty(),360);
+		AddTransition camRotD = new AddTransition(Duration.millis(3000), camRotateX.angleProperty(), 360);
 		camRotD.setUpperLimit(90);
 		camRotD.setInterpolator(Interpolator.LINEAR);
 		camRotD.setCycleCount(Animation.INDEFINITE);
@@ -353,7 +360,8 @@ public class MazeFX extends Application implements UI {
 		scene3dRoot.getChildren().add(shiftCard);
 	}
 
-	private void animateMove(MoveMessageType mm, Board b, long mvD, long shifD, boolean treasureReached, CountDownLatch lock) {
+	private void animateMove(MoveMessageType mm, Board b, long mvD, long shifD, boolean treasureReached,
+			CountDownLatch lock) {
 
 		final Duration durBefore = Duration.millis(shifD / 3);
 		final Duration durShift = Duration.millis(shifD / 3);
@@ -375,14 +383,14 @@ public class MazeFX extends Application implements UI {
 		VectorInt2 preShiftPos = VectorInt2.copy(playerPosition);
 		VectorInt2 postShiftPos = msc.getPlayerPositionAfterShift(preShiftPos);
 
-		List<CardFX> shiftCards = shiftedCardsPos.stream().map(v->boardCards[v.y][v.x]).collect(Collectors.toList());
+		List<CardFX> shiftCards = shiftedCardsPos.stream().map(v -> boardCards[v.y][v.x]).collect(Collectors.toList());
 		shiftCards.add(shiftCard);
 		CardFX pushedOutCard = boardCards[pushedOutCardPos.y][pushedOutCardPos.x];
-		List<PlayerFX> pushedOutPlayers = players.values().stream().filter(p->p.getBoundCard()==pushedOutCard).collect(Collectors.toList());
-		Translate3D pushedOutPlayersMoveTo = getCardTranslateForPosition(pushedOutNewPos.x,pushedOutNewPos.y);
-		Animation movePushedOutPlayers = AnimationFactory.moveShiftedOutPlayers(
-				pushedOutPlayers,pushedOutPlayersMoveTo,shiftCard,durMove.multiply(4));
-
+		List<PlayerFX> pushedOutPlayers = players.values().stream().filter(p -> p.getBoundCard() == pushedOutCard)
+				.collect(Collectors.toList());
+		Translate3D pushedOutPlayersMoveTo = getCardTranslateForPosition(pushedOutNewPos.x, pushedOutNewPos.y);
+		Animation movePushedOutPlayers = AnimationFactory.moveShiftedOutPlayers(pushedOutPlayers,
+				pushedOutPlayersMoveTo, shiftCard, durMove.multiply(4));
 
 		FakeTranslateBinding pinBind = null;
 		if (pin.getBoundCard() != null) {
@@ -398,21 +406,21 @@ public class MazeFX extends Application implements UI {
 		int newRotation = c.getOrientation().value();
 		// prevent rotating > 180°
 		int oldRotation = shiftCardC.rotateProperty().intValue();
-		int rotationDelta = newRotation-oldRotation;
-		if(rotationDelta > 180){
-			shiftCardC.rotateProperty().setValue(oldRotation+360);
-		}else if(rotationDelta < -180){
-			shiftCardC.rotateProperty().setValue(oldRotation-360);
+		int rotationDelta = newRotation - oldRotation;
+		if (rotationDelta > 180) {
+			shiftCardC.rotateProperty().setValue(oldRotation + 360);
+		} else if (rotationDelta < -180) {
+			shiftCardC.rotateProperty().setValue(oldRotation - 360);
 		}
 
-		Translate3D newCardBeforeShiftT = getCardTranslateForPosition(shiftCardStart.x,shiftCardStart.y); //getCardTranslateForShiftStart(newCardPos);
+		Translate3D newCardBeforeShiftT = getCardTranslateForPosition(shiftCardStart.x, shiftCardStart.y); // getCardTranslateForShiftStart(newCardPos);
 
 		// before before
 		// TODO: less time for "before before" more time for "before"
 		TranslateTransition animBeforeBefore = new TranslateTransition(durAfter, shiftCardC);
-		//animBeforeBefore.setToX(SHIFT_CARD_TRANSLATE.x);
+		// animBeforeBefore.setToX(SHIFT_CARD_TRANSLATE.x);
 		animBeforeBefore.setToY(SHIFT_CARD_TRANSLATE.y);
-		//animBeforeBefore.setToZ(SHIFT_CARD_TRANSLATE.z);
+		// animBeforeBefore.setToZ(SHIFT_CARD_TRANSLATE.z);
 
 		// before shift
 		RotateTransition cardRotateBeforeT = new RotateTransition(durBefore, shiftCardC);
@@ -421,12 +429,15 @@ public class MazeFX extends Application implements UI {
 		cardTranslateBeforeT.setToX(newCardBeforeShiftT.x);
 		cardTranslateBeforeT.setToY(newCardBeforeShiftT.y);
 		cardTranslateBeforeT.setToZ(newCardBeforeShiftT.z);
-		Animation animBefore = new ParallelTransition(cardRotateBeforeT, new SequentialTransition(animBeforeBefore,cardTranslateBeforeT));
+		Animation animBefore = new ParallelTransition(cardRotateBeforeT,
+				new SequentialTransition(animBeforeBefore, cardTranslateBeforeT));
 
 		// shifting
-		// invert delta shift, because graphics coordinates are the other way round!
-		Translate3D shiftTranslate = new Translate3D(shiftDelta.x, 0, -shiftDelta.y);//getCardShiftBy(newCardPos);
-		/*List<CardFX> shiftCards = */updateAndGetShiftedCards(newCardPos);
+		// invert delta shift, because graphics coordinates are the other way
+		// round!
+		Translate3D shiftTranslate = new Translate3D(shiftDelta.x, 0, -shiftDelta.y);
+		// getCardShiftBy(newCardPos);
+		/* List<CardFX> shiftCards = */updateAndGetShiftedCards(newCardPos);
 		Animation[] shiftAnims = new Animation[shiftCards.size()];
 		int i = 0;
 		for (CardFX crd : shiftCards) {
@@ -451,7 +462,8 @@ public class MazeFX extends Application implements UI {
 		// a little bit of time to switch focus from shifting to moving ^^
 		Transition pause = new PauseTransition(Duration.millis(100));
 
-		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, pause, /*animAfter,*/ moveAnim);
+		SequentialTransition allTr = new SequentialTransition(animBefore, animShift, movePushedOutPlayers, pause,
+				/* animAfter, */ moveAnim);
 		allTr.setInterpolator(Interpolator.LINEAR);
 		allTr.setOnFinished(e -> {
 			if (pinBind_final != null) {
@@ -461,7 +473,6 @@ public class MazeFX extends Application implements UI {
 				boardCards[newPinPos.getRow()][newPinPos.getCol()].getTreasure().treasureFound();
 			}
 			pin.bindToCard(boardCards[newPinPos.getRow()][newPinPos.getCol()]);
-
 
 			lock.countDown();
 		});
@@ -475,7 +486,7 @@ public class MazeFX extends Application implements UI {
 		Platform.runLater(() -> {
 			try {
 				animateMove(mm, b, moveDelay, shiftDelay, treasureReached, lock);
-			}catch(Exception e){
+			} catch (Exception e) {
 				lock.countDown();
 			}
 		});
@@ -487,7 +498,7 @@ public class MazeFX extends Application implements UI {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}while(lock.getCount()!=0);
+		} while (lock.getCount() != 0);
 	}
 
 	@Override
@@ -503,19 +514,18 @@ public class MazeFX extends Application implements UI {
 	@Override
 	public void setGame(Game g) {
 		this.game = g;
-		//not needed ??? Needs further testing
-/*		if (g == null) {
-			// Platform.runLater(()->clearBoard());
-		} else {
-			// g.start();
-		}*/
+		// not needed ??? Needs further testing
+		/*
+		 * if (g == null) { // Platform.runLater(()->clearBoard()); } else { //
+		 * g.start(); }
+		 */
 	}
 
 	@Override
 	public void gameEnded(Player winner) {
 		Platform.runLater(() -> {
 			controller.gameStopped();
-			if(winner!= null) {
+			if (winner != null) {
 				int playerId = winner.getID();
 				PlayerStatFX stats = playerStats.get(playerId);
 				stats.setWinner();

@@ -108,15 +108,14 @@ public class Settings {
         String ui = prop.getProperty("USERINTERFACE", "MazeFX");
         switch (ui) {
             case "BetterUI":
-                USERINTERFACE = new BetterUI();
+                USERINTERFACE = BetterUI.getInstance();
                 break;
             case "MazeFX":
-                USERINTERFACE = MazeFX.newInstance();
+                USERINTERFACE = MazeFX.getInstance();
                 break;
             default:
                 USERINTERFACE = null;
                 break;
-
         }
     }
 
