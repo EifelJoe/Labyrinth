@@ -43,6 +43,7 @@ public class BetterUI extends JFrame implements UI {
 	private JRadioButtonMenuItem[] MIPlayerSelection;
 
 	private class UIBoard extends JPanel {
+		private static final long serialVersionUID = 2L;
 		Board board;
 		Image images[][] = new Image[7][7];
 		Card c[][] = new Card[7][7];
@@ -163,6 +164,7 @@ public class BetterUI extends JFrame implements UI {
 	}
 
 	private class StatsPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
 		boolean initiated = false;
 		Map<Integer, JLabel> statLabels = new TreeMap<>();
 		Map<Integer, JLabel> currentPlayerLabels = new TreeMap<>();
@@ -353,7 +355,6 @@ public class BetterUI extends JFrame implements UI {
 
 	}
 
-	protected static String[] arguments;
 	private Game g;
 
 	private void MIStopActionPerformed(ActionEvent evt) {
@@ -372,8 +373,7 @@ public class BetterUI extends JFrame implements UI {
 		if (g == null) {
 			setGame(new Game());
 		}
-		arguments = new String[0];
-		g.parsArgs(arguments);
+		g.parsArgs();
 		statPanel.removeAll();
 		statPanel.initiated = false;
 		statPanel.repaint();

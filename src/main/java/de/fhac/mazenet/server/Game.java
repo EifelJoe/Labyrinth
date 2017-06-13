@@ -49,6 +49,7 @@ public class Game extends Thread {
 	private UI userinterface;
 	private int playerCount;
 	private List<TreasureType> foundTreasures;
+	private String[] args;
 
 	public Game() {
 		winner = -1;
@@ -326,7 +327,8 @@ public class Game extends Thread {
 
 	public static void main(String[] args) {
 		Game currentGame = new Game();
-		currentGame.parsArgs(args);
+		currentGame.args=args;
+		currentGame.parsArgs();
 		Locale.setDefault(Settings.LOCALE);
 		currentGame.userinterface = Settings.USERINTERFACE;
 		currentGame.userinterface.init(new Board());
@@ -337,7 +339,7 @@ public class Game extends Thread {
 		this.userinterface = userinterface;
 	}
 
-	public void parsArgs(String args[]) {
+	public void parsArgs() {
 		Options availableOptions = new Options();
 		availableOptions.addOption("c", true, "path to property file for configuration");
 

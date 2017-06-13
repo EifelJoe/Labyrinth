@@ -154,8 +154,7 @@ public class MazeFX extends Application implements UI {
 		if (game == null) {
 			setGame(new Game());
 		}
-		String[] arguments = new String[0];
-		game.parsArgs(arguments);
+		game.parsArgs();
 		game.setUserinterface(this);
 		controller.clearPlayerStats();
 		// $NON-NLS-1$
