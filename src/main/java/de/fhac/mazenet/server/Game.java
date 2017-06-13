@@ -29,6 +29,7 @@ import de.fhac.mazenet.server.timeouts.TimeOutManager;
 import de.fhac.mazenet.server.tools.Debug;
 import de.fhac.mazenet.server.tools.DebugLevel;
 import de.fhac.mazenet.server.userinterface.UI;
+import org.apache.commons.cli.*;
 
 public class Game extends Thread {
 
@@ -50,8 +51,6 @@ public class Game extends Thread {
     private List<TreasureType> foundTreasures;
 
     public Game() {
-        Debug.addDebugger(System.out, Settings.DEBUGLEVEL);
-        Debug.print(Messages.getString("Game.Constructor"), DebugLevel.VERBOSE); //$NON-NLS-1$
         winner = -1;
         spieler = new HashMap<Integer, Player>();
         timeOutManager = new TimeOutManager();
@@ -62,7 +61,7 @@ public class Game extends Thread {
      * Auf TCP Verbindungen warten und den Spielern die Verbindung ermoeglichen
      */
     public void init(int playerCount) {
-
+        Debug.addDebugger(System.out, Settings.DEBUGLEVEL);
         Debug.print(Messages.getString("Game.initFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
         // Socketinitialisierung aus dem Constructor in init verschoben. Sonst
         // Errors wegen Thread.
@@ -78,7 +77,7 @@ public class Game extends Thread {
             // Setup SSL
             System.setProperty("javax.net.ssl.keyStorePassword", Settings.SSL_CERT_STORE_PASSWD);
             System.setProperty("javax.net.ssl.keyStore", Settings.SSL_CERT_STORE);
-            
+
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             sslServerSocket = ssf.createServerSocket(Settings.SSL_PORT);
 
@@ -86,7 +85,7 @@ public class Game extends Thread {
         } catch (IOException e) {
             //FIXME differentiate between SSL Error und Port used error
             System.err.println(e.getLocalizedMessage());
-            Debug.print(Messages.getString("Game.portUsed"),DebugLevel.DEFAULT); //$NON-NLS-1$
+            Debug.print(Messages.getString("Game.portUsed"), DebugLevel.DEFAULT); //$NON-NLS-1$
         }
         timeOutManager.startLoginTimeOut(this);
         Stack<Integer> availableIds = new Stack<>();
@@ -110,7 +109,8 @@ public class Game extends Thread {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.err.println(Messages.getString("Game.errorWhileConnecting")); //$NON-NLS-1$
-                System.err.println(e.getMessage());                }
+                System.err.println(e.getMessage());
+            }
         };
         Runnable waitForSSLConnectionTask = () -> {
             try {
@@ -122,10 +122,12 @@ public class Game extends Thread {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.err.println(Messages.getString("Game.errorWhileConnecting")); //$NON-NLS-1$
-                System.err.println(e.getMessage());                }
+                System.err.println(e.getMessage());
+            }
         };
         ExecutorService pool = Executors.newFixedThreadPool(2);
-        Future<?> noSSLStatus =null;Future<?> SSLStatus=null;
+        Future<?> noSSLStatus = null;
+        Future<?> SSLStatus = null;
 
         // Warten bis die Initialisierung durchgelaufen ist
         boolean spielbereit = false;
@@ -139,10 +141,10 @@ public class Game extends Thread {
                             + (playerCount - availableIds.size()) + "/" + playerCount //$NON-NLS-1$
                             + ")", DebugLevel.DEFAULT); //$NON-NLS-1$
 
-                    if(noSSLStatus == null || noSSLStatus.isDone()==true) {
+                    if (noSSLStatus == null || noSSLStatus.isDone() == true) {
                         noSSLStatus = pool.submit(waitForConnectionTask);
                     }
-                    if(SSLStatus == null || SSLStatus.isDone()==true) {
+                    if (SSLStatus == null || SSLStatus.isDone() == true) {
                         SSLStatus = pool.submit(waitForSSLConnectionTask);
                     }
                     barrier.await();
@@ -324,10 +326,9 @@ public class Game extends Thread {
     }
 
     public static void main(String[] args) {
-        Settings.reload("/config.properties"); //$NON-NLS-1$
-        Locale.setDefault(Settings.LOCALE);
         Game currentGame = new Game();
         currentGame.parsArgs(args);
+        Locale.setDefault(Settings.LOCALE);
         currentGame.userinterface = Settings.USERINTERFACE;
         currentGame.userinterface.init(new Board());
         currentGame.userinterface.setGame(currentGame);
@@ -338,13 +339,23 @@ public class Game extends Thread {
     }
 
     public void parsArgs(String args[]) {
-        playerCount = Settings.DEFAULT_PLAYERS;
-        for (String arg : args) {
-            String playerFlag = "-n"; //$NON-NLS-1$
-            if (arg.startsWith(playerFlag)) {
-                playerCount = Integer.valueOf(arg.substring(playerFlag.length()));
-            }
+        Options availableOptions = new Options();
+        availableOptions.addOption("c", true, "path to property file for configuration");
+
+        CommandLineParser parser = new DefaultParser();
+        try {
+            CommandLine cmd = parser.parse(availableOptions, args);
+            String configPath = cmd.getOptionValue("c");
+            //Wenn mit null aufgerufen werden standardwerte benutzt
+            Settings.reload(configPath);
+
+        } catch (ParseException e) {
+            System.out.println("Usage: -c <pfad zu config file>");
         }
+
+
+        playerCount = Settings.DEFAULT_PLAYERS;
+
     }
 
     public void run() {
