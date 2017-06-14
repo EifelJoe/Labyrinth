@@ -88,53 +88,61 @@ public class C_MainUI implements Initializable {
     private List<Runnable> camRotateDownStopListeners = new LinkedList<>();
     private List<Runnable> startServerListeners = new LinkedList<>();
     private List<Runnable> stopServerListeners = new LinkedList<>();
-    
-    public int getMaxPlayer(){
-    	return maxPlayer.getValue().intValue();
+
+    public int getMaxPlayer() {
+        return maxPlayer.getValue().intValue();
     }
 
     @FXML
-    private void camRotRightBtMousePress(MouseEvent evt){
-        camRotateRightStartListeners.forEach(r->r.run());
+    private void camRotRightBtMousePress(MouseEvent evt) {
+        camRotateRightStartListeners.forEach(r -> r.run());
     }
 
     @FXML
-    private void camRotRightBtMouseRelease(MouseEvent evt){
-        camRotateRightStopListeners.forEach(r->r.run());
+    private void camRotRightBtMouseRelease(MouseEvent evt) {
+        camRotateRightStopListeners.forEach(r -> r.run());
     }
 
     @FXML
-    private void camRotLeftBtMousePress(MouseEvent evt){
-        camRotateLeftStartListeners.forEach(r->r.run());
+    private void camRotLeftBtMousePress(MouseEvent evt) {
+        camRotateLeftStartListeners.forEach(r -> r.run());
     }
 
     @FXML
-    private void camRotLeftBtMouseRelease(MouseEvent evt){
-        camRotateLeftStopListeners.forEach(r->r.run());
+    private void camRotLeftBtMouseRelease(MouseEvent evt) {
+        camRotateLeftStopListeners.forEach(r -> r.run());
     }
 
     @FXML
-    private void camRotUpBtMousePress(MouseEvent evt){ camRotateUpStartListeners.forEach(r->r.run()); }
-
-    @FXML
-    private void camRotUpBtMouseRelease(MouseEvent evt){ camRotateUpStopListeners.forEach(r->r.run()); }
-
-    @FXML
-    private void camRotDownBtMousePress(MouseEvent evt){ camRotateDownStartListeners.forEach(r->r.run()); }
-
-    @FXML
-    private void camRotDownBtMouseRelease(MouseEvent evt){ camRotateDownStopListeners.forEach(r->r.run()); }
-
-    @FXML
-    private void serverStartAction(ActionEvent aevt){
-    	//TODO
-    	startServerListeners.forEach(r->r.run());
+    private void camRotUpBtMousePress(MouseEvent evt) {
+        camRotateUpStartListeners.forEach(r -> r.run());
     }
 
     @FXML
-    private void serverStopAction(ActionEvent aevt){
-    	//TODO
-    	stopServerListeners.forEach(r->r.run());
+    private void camRotUpBtMouseRelease(MouseEvent evt) {
+        camRotateUpStopListeners.forEach(r -> r.run());
+    }
+
+    @FXML
+    private void camRotDownBtMousePress(MouseEvent evt) {
+        camRotateDownStartListeners.forEach(r -> r.run());
+    }
+
+    @FXML
+    private void camRotDownBtMouseRelease(MouseEvent evt) {
+        camRotateDownStopListeners.forEach(r -> r.run());
+    }
+
+    @FXML
+    private void serverStartAction(ActionEvent aevt) {
+        //TODO
+        startServerListeners.forEach(r -> r.run());
+    }
+
+    @FXML
+    private void serverStopAction(ActionEvent aevt) {
+        //TODO
+        stopServerListeners.forEach(r -> r.run());
     }
 
     public Pane getParent3D() {
@@ -149,47 +157,47 @@ public class C_MainUI implements Initializable {
         return camZoomSlide;
     }
 
-    public void addCamRotateRightStartListener(Runnable r){
+    public void addCamRotateRightStartListener(Runnable r) {
         camRotateRightStartListeners.add(r);
     }
 
-    public void addCamRotateRightStopListener(Runnable r){
+    public void addCamRotateRightStopListener(Runnable r) {
         camRotateRightStopListeners.add(r);
     }
 
-    public void addCamRotateLeftStartListener(Runnable r){
+    public void addCamRotateLeftStartListener(Runnable r) {
         camRotateLeftStartListeners.add(r);
     }
 
-    public void addCamRotateLeftStopListener(Runnable r){
+    public void addCamRotateLeftStopListener(Runnable r) {
         camRotateLeftStopListeners.add(r);
     }
 
-    public void addCamRotateUpStartListener(Runnable r){
+    public void addCamRotateUpStartListener(Runnable r) {
         camRotateUpStartListeners.add(r);
     }
 
-    public void addCamRotateUpStopListener(Runnable r){
+    public void addCamRotateUpStopListener(Runnable r) {
         camRotateUpStopListeners.add(r);
     }
 
-    public void addCamRotateDownStartListener(Runnable r){
+    public void addCamRotateDownStartListener(Runnable r) {
         camRotateDownStartListeners.add(r);
     }
 
-    public void addCamRotateDownStopListener(Runnable r){
+    public void addCamRotateDownStopListener(Runnable r) {
         camRotateDownStopListeners.add(r);
     }
 
-    public void addStartServerListener(Runnable r){
-    	startServerListeners.add(r);
+    public void addStartServerListener(Runnable r) {
+        startServerListeners.add(r);
     }
 
-    public void addStopServerListener(Runnable r){
-    	stopServerListeners.add(r);
+    public void addStopServerListener(Runnable r) {
+        stopServerListeners.add(r);
     }
 
-    public void gameStarted(){
+    public void gameStarted() {
         serverStart.disableProperty().setValue(true);
         maxPlayer.disableProperty().setValue(true);
         serverStop.disableProperty().setValue(false);
@@ -207,29 +215,29 @@ public class C_MainUI implements Initializable {
         serverStatusText.setText(Messages.getString("MazeFX.status.stopped"));
     }
 
-    public void addPlayerStat(Node statNode){
-    	playerStatsPlaceholder.setVisible(false);
+    public void addPlayerStat(Node statNode) {
+        playerStatsPlaceholder.setVisible(false);
         playerStatsContrainer.getChildren().addAll(statNode);
-        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size()*60);
+        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size() * 60);
     }
 
-    public void clearPlayerStats(){
+    public void clearPlayerStats() {
         hideWinner();
         playerStatsContrainer.getChildren().clear();
-        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size()*60);
+        playerStatsContrainer.setPrefHeight(playerStatsContrainer.getChildren().size() * 60);
 
     }
 
-    public void showWinner(String name){
+    public void showWinner(String name) {
         winnerPlayer.setText(name);
         winnerPanel.setVisible(true);
     }
 
-    public void hideWinner(){
+    public void hideWinner() {
         winnerPanel.setVisible(false);
     }
 
-    private void initalizeWinnerPanelTextEffect(){
+    private void initalizeWinnerPanelTextEffect() {
         Blend blend = new Blend();
         blend.setMode(BlendMode.MULTIPLY);
 
@@ -263,13 +271,13 @@ public class C_MainUI implements Initializable {
         ChangeListener<? super java.lang.Number> updateFont = (observable, oldValue, newValue) -> {
             double w = parent3D.getWidth();
             double h = parent3D.getHeight();
-            double fontSize = Math.min(w,h)*1.25;
+            double fontSize = Math.min(w, h) * 1.25;
             winnerText.setStyle("-fx-font-size: " + +fontSize + "%");
             winnerPlayer.setStyle("-fx-font-size: " + fontSize + "%");
         };
         parent3D.widthProperty().addListener(updateFont);
         parent3D.heightProperty().addListener(updateFont);
-        updateFont.changed(null,null,null);
+        updateFont.changed(null, null, null);
 
         winnerText.setEffect(blend);
         winnerPlayer.setEffect(blend);
@@ -277,10 +285,18 @@ public class C_MainUI implements Initializable {
 
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        Platform.runLater(()->{
-            Debug.addDebugger(new BetterOutputStream(s->Platform.runLater(()->logArea.appendText(s))), Settings.DEBUGLEVEL);
+        Platform.runLater(() -> {
+            Debug.addDebugger(new BetterOutputStream(s -> Platform.runLater(() -> logArea.appendText(s))), Settings.DEBUGLEVEL);
             initalizeWinnerPanelTextEffect();
-            maxPlayer.getValueFactory().setValue(Settings.NUMBER_OF_PLAYERS);
+            //HOTFIX different implementations of Spinner from OpenJFX and Oracle JavaFX
+            Number v = maxPlayer.getValueFactory().getValue();
+            if (v instanceof Double) {
+                //OpenJFX
+                maxPlayer.getValueFactory().setValue(new Double(Settings.NUMBER_OF_PLAYERS));
+            } else {
+                // OracleJFX
+                maxPlayer.getValueFactory().setValue(Settings.NUMBER_OF_PLAYERS);
+            }
         });
     }
 }
