@@ -325,16 +325,25 @@ public class Game extends Thread {
     public void parsArgs() {
         Options availableOptions = new Options();
         availableOptions.addOption("c", true, "path to property file for configuration");
-
+        availableOptions.addOption("h", false, "displays this help message");
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(availableOptions, args);
             String configPath = cmd.getOptionValue("c");
             // Wenn mit null aufgerufen, werden standardwerte benutzt
             Settings.reload(configPath);
+            if (cmd.hasOption("h")) {
+                printCMDHelp(0, availableOptions);
+            }
         } catch (ParseException e) {
-            System.out.println("Usage: -c <pfad zu config file>");
+            printCMDHelp(1, availableOptions);
         }
+    }
+
+    private void printCMDHelp(int exitCode, Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("java -jar maze-server.jar [options]\nAvailable Options:", options);
+        System.exit(exitCode);
     }
 
     public void run() {
