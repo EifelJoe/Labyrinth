@@ -1,25 +1,5 @@
 package de.fhac.mazenet.server;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Stack;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import javax.net.ssl.SSLServerSocketFactory;
-
 import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.generated.ErrorType;
 import de.fhac.mazenet.server.generated.MoveMessageType;
@@ -29,6 +9,15 @@ import de.fhac.mazenet.server.timeouts.TimeOutManager;
 import de.fhac.mazenet.server.tools.Debug;
 import de.fhac.mazenet.server.tools.DebugLevel;
 import de.fhac.mazenet.server.userinterface.UI;
+import org.apache.commons.cli.*;
+
+import javax.net.ssl.SSLServerSocketFactory;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Game extends Thread {
 
@@ -46,23 +35,31 @@ public class Game extends Thread {
      */
     private Integer winner = -1;
     private UI userinterface;
-    private int playerCount;
     private List<TreasureType> foundTreasures;
+    private String[] args;
 
     public Game() {
-        Debug.addDebugger(System.out, Settings.DEBUGLEVEL);
-        Debug.print(Messages.getString("Game.Constructor"), DebugLevel.VERBOSE); //$NON-NLS-1$
         winner = -1;
         spieler = new HashMap<Integer, Player>();
         timeOutManager = new TimeOutManager();
         foundTreasures = new ArrayList<TreasureType>();
     }
 
+    public static void main(String[] args) {
+        Game currentGame = new Game();
+        currentGame.args = args;
+        currentGame.parsArgs();
+        Locale.setDefault(Settings.LOCALE);
+        currentGame.userinterface = Settings.USERINTERFACE;
+        currentGame.userinterface.init(new Board());
+        currentGame.userinterface.setGame(currentGame);
+    }
+
     /**
      * Auf TCP Verbindungen warten und den Spielern die Verbindung ermoeglichen
      */
     public void init(int playerCount) {
-
+        Debug.addDebugger(System.out, Settings.DEBUGLEVEL);
         Debug.print(Messages.getString("Game.initFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
         // Socketinitialisierung aus dem Constructor in init verschoben. Sonst
         // Errors wegen Thread.
@@ -70,23 +67,22 @@ public class Game extends Thread {
         // Constructor
         try {
 
-            //unencrypted
+            // unencrypted
             serverSocket = new ServerSocket(Settings.PORT);
 
-            //encrtypted
+            // encrtypted
 
             // Setup SSL
             System.setProperty("javax.net.ssl.keyStorePassword", Settings.SSL_CERT_STORE_PASSWD);
             System.setProperty("javax.net.ssl.keyStore", Settings.SSL_CERT_STORE);
-            
+
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             sslServerSocket = ssf.createServerSocket(Settings.SSL_PORT);
 
-
         } catch (IOException e) {
-            //FIXME differentiate between SSL Error und Port used error
+            // FIXME differentiate between SSL Error und Port used error
             System.err.println(e.getLocalizedMessage());
-            Debug.print(Messages.getString("Game.portUsed"),DebugLevel.DEFAULT); //$NON-NLS-1$
+            Debug.print(Messages.getString("Game.portUsed"), DebugLevel.DEFAULT); //$NON-NLS-1$
         }
         timeOutManager.startLoginTimeOut(this);
         Stack<Integer> availableIds = new Stack<>();
@@ -97,35 +93,34 @@ public class Game extends Thread {
         }
         if (!Settings.TESTBOARD)
             Collections.shuffle(availableIds);
-        //preparing Tasks for SSL and unencrypted
+        // preparing Tasks for SSL and unencrypted
         final CyclicBarrier barrier = new CyclicBarrier(2);
         final Socket[] mazeClient = {null};
         Runnable waitForConnectionTask = () -> {
             try {
                 mazeClient[0] = serverSocket.accept();
                 barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.err.println(Messages.getString("Game.errorWhileConnecting")); //$NON-NLS-1$
-                System.err.println(e.getMessage());                }
+                System.err.println(e.getMessage());
+            }
         };
         Runnable waitForSSLConnectionTask = () -> {
             try {
                 mazeClient[0] = sslServerSocket.accept();
                 barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.err.println(Messages.getString("Game.errorWhileConnecting")); //$NON-NLS-1$
-                System.err.println(e.getMessage());                }
+                System.err.println(e.getMessage());
+            }
         };
         ExecutorService pool = Executors.newFixedThreadPool(2);
-        Future<?> noSSLStatus =null;Future<?> SSLStatus=null;
+        Future<?> noSSLStatus = null;
+        Future<?> SSLStatus = null;
 
         // Warten bis die Initialisierung durchgelaufen ist
         boolean spielbereit = false;
@@ -139,10 +134,10 @@ public class Game extends Thread {
                             + (playerCount - availableIds.size()) + "/" + playerCount //$NON-NLS-1$
                             + ")", DebugLevel.DEFAULT); //$NON-NLS-1$
 
-                    if(noSSLStatus == null || noSSLStatus.isDone()==true) {
+                    if (noSSLStatus == null || noSSLStatus.isDone()) {
                         noSSLStatus = pool.submit(waitForConnectionTask);
                     }
-                    if(SSLStatus == null || SSLStatus.isDone()==true) {
+                    if (SSLStatus == null || SSLStatus.isDone()) {
                         SSLStatus = pool.submit(waitForSSLConnectionTask);
                     }
                     barrier.await();
@@ -185,7 +180,7 @@ public class Game extends Thread {
         // Spielbrett generieren
         spielBrett = new Board();
         // Verteilen der Schatzkarten
-        ArrayList<TreasureType> treasureCardPile = new ArrayList<TreasureType>();
+        ArrayList<TreasureType> treasureCardPile = new ArrayList<>();
         treasureCardPile.add(TreasureType.SYM_01);
         treasureCardPile.add(TreasureType.SYM_02);
         treasureCardPile.add(TreasureType.SYM_03);
@@ -220,7 +215,7 @@ public class Game extends Thread {
         int anzCards = treasureCardPile.size() / spieler.size();
         int i = 0;
         for (Integer player : spieler.keySet()) {
-            ArrayList<TreasureType> cardsPerPlayer = new ArrayList<TreasureType>();
+            ArrayList<TreasureType> cardsPerPlayer = new ArrayList<>();
             for (int j = i * anzCards; j < (i + 1) * anzCards; j++) {
                 cardsPerPlayer.add(treasureCardPile.get(j));
             }
@@ -243,14 +238,14 @@ public class Game extends Thread {
 
     private List<Player> playerToList() {
         Debug.print(Messages.getString("Game.playerToListFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
-        List<Player> erg = new ArrayList<Player>();
+        List<Player> erg = new ArrayList<>();
         for (Integer id : spieler.keySet()) {
             erg.add(spieler.get(id));
         }
         return erg;
     }
 
-    public void singleTurn(Integer currPlayer) {
+    private void singleTurn(Integer currPlayer) {
         /**
          * Connection.awaitMove checken -> Bei Fehler illegalMove -> liefert
          * neuen Zug
@@ -292,7 +287,7 @@ public class Game extends Thread {
     /**
      * Aufraeumen nach einem Spiel
      */
-    public void cleanUp() {
+    private void cleanUp() {
         Debug.print(Messages.getString("Game.cleanUpFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
         if (winner > 0) {
             for (Integer playerID : spieler.keySet()) {
@@ -323,35 +318,39 @@ public class Game extends Thread {
 
     }
 
-    public static void main(String[] args) {
-        Settings.reload("/config.properties"); //$NON-NLS-1$
-        Locale.setDefault(Settings.LOCALE);
-        Game currentGame = new Game();
-        currentGame.parsArgs(args);
-        currentGame.userinterface = Settings.USERINTERFACE;
-        currentGame.userinterface.init(new Board());
-        currentGame.userinterface.setGame(currentGame);
-    }
-
     public void setUserinterface(UI userinterface) {
         this.userinterface = userinterface;
     }
 
-    public void parsArgs(String args[]) {
-        playerCount = Settings.DEFAULT_PLAYERS;
-        for (String arg : args) {
-            String playerFlag = "-n"; //$NON-NLS-1$
-            if (arg.startsWith(playerFlag)) {
-                playerCount = Integer.valueOf(arg.substring(playerFlag.length()));
+    public void parsArgs() {
+        Options availableOptions = new Options();
+        availableOptions.addOption("c", true, "path to property file for configuration");
+        availableOptions.addOption("h", false, "displays this help message");
+        CommandLineParser parser = new DefaultParser();
+        try {
+            CommandLine cmd = parser.parse(availableOptions, args);
+            String configPath = cmd.getOptionValue("c");
+            // Wenn mit null aufgerufen, werden standardwerte benutzt
+            Settings.reload(configPath);
+            if (cmd.hasOption("h")) {
+                printCMDHelp(0, availableOptions);
             }
+        } catch (ParseException e) {
+            printCMDHelp(1, availableOptions);
         }
+    }
+
+    private void printCMDHelp(int exitCode, Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("java -jar maze-server.jar [options]\nAvailable Options:", options);
+        System.exit(exitCode);
     }
 
     public void run() {
         Debug.print(Messages.getString("Game.runFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
         Debug.print(Messages.getString("Game.startNewGame"), DebugLevel.DEFAULT); //$NON-NLS-1$
         // TODO Configfile austauschbar machen
-        init(playerCount);
+        init(Settings.NUMBER_OF_PLAYERS);
         if (spieler.isEmpty()) {
             return;
         }
@@ -375,10 +374,10 @@ public class Game extends Thread {
     private Integer nextPlayer(Integer currPlayer) throws NoSuchElementException {
         Debug.print(Messages.getString("Game.nextPlayerFkt"), DebugLevel.VERBOSE); //$NON-NLS-1$
         Iterator<Integer> iDIterator = spieler.keySet().iterator();
-        Integer id = -1;
+        Integer id;
         while (iDIterator.hasNext()) {
             id = iDIterator.next();
-            if (id == currPlayer) {
+            if (id.equals(currPlayer)) {
                 break;
             }
         }

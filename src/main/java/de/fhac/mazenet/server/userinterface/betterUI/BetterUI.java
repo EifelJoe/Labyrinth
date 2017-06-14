@@ -20,6 +20,8 @@ import java.util.TreeMap;
 
 public class BetterUI extends JFrame implements UI {
 
+	private static final long serialVersionUID = 2L;
+	static BetterUI instance;
 	int currentPlayer;
 	UIBoard uiboard = new UIBoard();
 	StatsPanel statPanel = new StatsPanel();
@@ -41,6 +43,7 @@ public class BetterUI extends JFrame implements UI {
 	private JRadioButtonMenuItem[] MIPlayerSelection;
 
 	private class UIBoard extends JPanel {
+		private static final long serialVersionUID = 2L;
 		Board board;
 		Image images[][] = new Image[7][7];
 		Card c[][] = new Card[7][7];
@@ -161,6 +164,7 @@ public class BetterUI extends JFrame implements UI {
 	}
 
 	private class StatsPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
 		boolean initiated = false;
 		Map<Integer, JLabel> statLabels = new TreeMap<>();
 		Map<Integer, JLabel> currentPlayerLabels = new TreeMap<>();
@@ -241,7 +245,7 @@ public class BetterUI extends JFrame implements UI {
 		}
 	}
 
-	public BetterUI() {
+	private BetterUI() {
 		// Eigenname
 		super("Better MazeNet UI"); //$NON-NLS-1$
 		{
@@ -286,7 +290,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[0].setText(Messages.getString("BetterUI.OnePlayer")); //$NON-NLS-1$
 					MIPlayerSelection[0].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 1;
+							Settings.NUMBER_OF_PLAYERS = 1;
 						}
 					});
 				}
@@ -296,7 +300,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[1].setText(Messages.getString("BetterUI.TwoPlayer")); //$NON-NLS-1$
 					MIPlayerSelection[1].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 2;
+							Settings.NUMBER_OF_PLAYERS = 2;
 						}
 					});
 				}
@@ -306,7 +310,7 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[2].setText(Messages.getString("BetterUI.ThreePlayer")); //$NON-NLS-1$
 					MIPlayerSelection[2].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 3;
+							Settings.NUMBER_OF_PLAYERS = 3;
 						}
 					});
 				}
@@ -316,18 +320,17 @@ public class BetterUI extends JFrame implements UI {
 					MIPlayerSelection[3].setText(Messages.getString("BetterUI.FourPlayer")); //$NON-NLS-1$
 					MIPlayerSelection[3].addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
-							Settings.DEFAULT_PLAYERS = 4;
+							Settings.NUMBER_OF_PLAYERS = 4;
 						}
 					});
-					
+
 				}
 				ButtonGroup spielerAnz = new ButtonGroup();
 				for (JRadioButtonMenuItem item : MIPlayerSelection) {
 					spielerAnz.add(item);
 
 				}
-				MIPlayerSelection[Settings.DEFAULT_PLAYERS-1].setSelected(true);
-				
+				MIPlayerSelection[Settings.NUMBER_OF_PLAYERS - 1].setSelected(true);
 
 			}
 		}
@@ -352,7 +355,6 @@ public class BetterUI extends JFrame implements UI {
 
 	}
 
-	protected static String[] arguments;
 	private Game g;
 
 	private void MIStopActionPerformed(ActionEvent evt) {
@@ -371,8 +373,7 @@ public class BetterUI extends JFrame implements UI {
 		if (g == null) {
 			setGame(new Game());
 		}
-		arguments = new String[0];
-		g.parsArgs(arguments);
+		g.parsArgs();
 		statPanel.removeAll();
 		statPanel.initiated = false;
 		statPanel.repaint();
@@ -631,6 +632,12 @@ public class BetterUI extends JFrame implements UI {
 		}
 		MIStart.setEnabled(true);
 		MIStop.setEnabled(false);
+	}
+
+	public static BetterUI getInstance() {
+		if (instance == null)
+			instance = new BetterUI();
+		return instance;
 	}
 
 }

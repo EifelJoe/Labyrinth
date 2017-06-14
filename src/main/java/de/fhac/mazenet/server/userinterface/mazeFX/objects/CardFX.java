@@ -1,9 +1,9 @@
 package de.fhac.mazenet.server.userinterface.mazeFX.objects;
 
 import de.fhac.mazenet.server.Card;
-import de.fhac.mazenet.server.config.Settings;
 import de.fhac.mazenet.server.generated.CardType;
 import de.fhac.mazenet.server.generated.TreasureType;
+import de.fhac.mazenet.server.userinterface.UISettings;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -33,7 +33,7 @@ public class CardFX extends Box {
     private static final HashMap<Card.CardShape,Image> CARD_SHAPE_IMAGE_MAPPING;
 
     static {
-        final String imgPre = Settings.IMAGEPATH;
+        final String imgPre = UISettings.IMAGEPATH;
         CARD_SHAPE_IMAGE_MAPPING = new HashMap<>();
         CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.I,new Image(imgPre+"I0.png")); //$NON-NLS-1$
         CARD_SHAPE_IMAGE_MAPPING.put(Card.CardShape.L,new Image(imgPre+"L0.png")); //$NON-NLS-1$

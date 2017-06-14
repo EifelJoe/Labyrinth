@@ -2,9 +2,9 @@ package de.fhac.mazenet.server.userinterface.mazeFX;
 
 import de.fhac.mazenet.server.Messages;
 import de.fhac.mazenet.server.config.Settings;
+import de.fhac.mazenet.server.tools.Debug;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.BetterOutputStream;
 import de.fhac.mazenet.server.userinterface.mazeFX.util.ImageResourcesFX;
-import de.fhac.mazenet.server.tools.Debug;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -13,10 +13,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
-import javafx.scene.effect.*;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,6 +78,16 @@ public class C_MainUI implements Initializable {
 
     @FXML
     private Label winnerPlayer;
+    private List<Runnable> camRotateRightStartListeners = new LinkedList<>();
+    private List<Runnable> camRotateRightStopListeners = new LinkedList<>();
+    private List<Runnable> camRotateLeftStartListeners = new LinkedList<>();
+    private List<Runnable> camRotateLeftStopListeners = new LinkedList<>();
+    private List<Runnable> camRotateUpStartListeners = new LinkedList<>();
+    private List<Runnable> camRotateUpStopListeners = new LinkedList<>();
+    private List<Runnable> camRotateDownStartListeners = new LinkedList<>();
+    private List<Runnable> camRotateDownStopListeners = new LinkedList<>();
+    private List<Runnable> startServerListeners = new LinkedList<>();
+    private List<Runnable> stopServerListeners = new LinkedList<>();
     
     public int getMaxPlayer(){
     	return maxPlayer.getValue().intValue();
@@ -113,13 +130,13 @@ public class C_MainUI implements Initializable {
     	//TODO
     	startServerListeners.forEach(r->r.run());
     }
-    
+
     @FXML
     private void serverStopAction(ActionEvent aevt){
     	//TODO
     	stopServerListeners.forEach(r->r.run());
     }
-    
+
     public Pane getParent3D() {
         return parent3D;
     }
@@ -132,52 +149,42 @@ public class C_MainUI implements Initializable {
         return camZoomSlide;
     }
 
-    private List<Runnable> camRotateRightStartListeners = new LinkedList<>();
     public void addCamRotateRightStartListener(Runnable r){
         camRotateRightStartListeners.add(r);
     }
 
-    private List<Runnable> camRotateRightStopListeners = new LinkedList<>();
     public void addCamRotateRightStopListener(Runnable r){
         camRotateRightStopListeners.add(r);
     }
 
-    private List<Runnable> camRotateLeftStartListeners = new LinkedList<>();
     public void addCamRotateLeftStartListener(Runnable r){
         camRotateLeftStartListeners.add(r);
     }
 
-    private List<Runnable> camRotateLeftStopListeners = new LinkedList<>();
     public void addCamRotateLeftStopListener(Runnable r){
         camRotateLeftStopListeners.add(r);
     }
 
-    private List<Runnable> camRotateUpStartListeners = new LinkedList<>();
     public void addCamRotateUpStartListener(Runnable r){
         camRotateUpStartListeners.add(r);
     }
 
-    private List<Runnable> camRotateUpStopListeners = new LinkedList<>();
     public void addCamRotateUpStopListener(Runnable r){
         camRotateUpStopListeners.add(r);
     }
 
-    private List<Runnable> camRotateDownStartListeners = new LinkedList<>();
     public void addCamRotateDownStartListener(Runnable r){
         camRotateDownStartListeners.add(r);
     }
 
-    private List<Runnable> camRotateDownStopListeners = new LinkedList<>();
     public void addCamRotateDownStopListener(Runnable r){
         camRotateDownStopListeners.add(r);
     }
 
-    private List<Runnable> startServerListeners = new LinkedList<>();
     public void addStartServerListener(Runnable r){
     	startServerListeners.add(r);
     }
-    
-    private List<Runnable> stopServerListeners = new LinkedList<>();
+
     public void addStopServerListener(Runnable r){
     	stopServerListeners.add(r);
     }
@@ -273,6 +280,7 @@ public class C_MainUI implements Initializable {
         Platform.runLater(()->{
             Debug.addDebugger(new BetterOutputStream(s->Platform.runLater(()->logArea.appendText(s))), Settings.DEBUGLEVEL);
             initalizeWinnerPanelTextEffect();
+            maxPlayer.getValueFactory().setValue(Settings.NUMBER_OF_PLAYERS);
         });
     }
 }
